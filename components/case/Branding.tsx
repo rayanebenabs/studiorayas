@@ -15,8 +15,8 @@ export function Branding({ client }: { client: Client }) {
             const h = row.length === 3 ? "clamp(300px, 31vw, 470px)" : "clamp(240px, 27vw, 420px)";
             return (
               <div key={r} className="branding__row" style={{ gridTemplateColumns: row.map((c) => `${c.span}fr`).join(" "), ["--h" as string]: h }}>
-                {row.map(({ visual }) => (
-                  <figure key={visual.alt} className="branding__fig" data-reveal>
+                {row.map(({ visual }, k) => (
+                  <figure key={k} className="branding__fig" data-reveal>
                     <div className="branding__media">
                       <Visual v={visual} />
                     </div>

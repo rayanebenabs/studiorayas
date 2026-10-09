@@ -10,5 +10,5 @@ export function Visual({ v, loading = "lazy" }: { v: V; loading?: "lazy" | "eage
       </div>
     );
   }
-  return <img src={v.src} alt={v.alt} loading={loading} />;
+  return <img src={v.src} alt={v.alt} loading={loading} style={v.focus ? { objectPosition: v.focus } : undefined} />;
 }

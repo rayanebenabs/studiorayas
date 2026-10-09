@@ -40,41 +40,42 @@ export interface UsageCard {
   dark?: boolean;
 }
 
+// Images des cartes : public/accueil/, nommées onglet-numéro de carte (vous-2.jpg = onglet « Vous », 2e carte).
 export const USAGES: { tab: string; cards: UsageCard[] }[] = [
   {
     tab: "Vous",
     cards: [
       { title: "Un dossier qui vous appartient", text: "Le Brand OS vous est livré. Il tourne dans vos outils, sans avoir besoin de nous.", dark: true },
-      { title: "Vous le faites évoluer seul", text: "Une couleur, un fait, un canal : vous changez la règle, le journal garde la trace.", image: "/travaux/julie/photo1.jpg" },
-      { title: "Le jugement reste le vôtre", text: "Le système applique. L'œil tranche.", image: "/travaux/inavoue/guide.jpg" },
-      { title: "Une charte vivante", text: "Elle évolue avec vous, version après version, au lieu de dormir dans un PDF.", image: "/travaux/pollen/trainee.jpg" },
+      { title: "Vous le faites évoluer seul", text: "Une couleur, un fait, un canal : vous changez la règle, le journal garde la trace.", image: "/accueil/vous-2.jpg" },
+      { title: "Le jugement reste le vôtre", text: "Le système applique. L'œil tranche.", image: "/accueil/vous-3.jpg" },
+      { title: "Une charte vivante", text: "Elle évolue avec vous, version après version, au lieu de dormir dans un PDF.", image: "/accueil/vous-4.jpg" },
     ],
   },
   {
     tab: "Votre équipe",
     cards: [
       { title: "Une seule source", text: "Vous, votre équipe et vos prestataires lisez les mêmes règles. Plus de versions qui se contredisent.", dark: true },
-      { title: "La réponse est écrite", text: "« Est-ce que c'est dans la marque ? » ne se discute plus en réunion. La règle tranche.", image: "/travaux/slayyy/p2.jpg" },
-      { title: "Changer une fois", text: "Vous modifiez une règle à un seul endroit. Le site, les posts et les agents suivent.", image: "/travaux/julie/print.jpg" },
-      { title: "Plus de chasse aux documents", text: "La bonne couleur, le bon prix, la bonne formule : tout est au même endroit.", image: "/travaux/inavoue/colis.jpg" },
+      { title: "La réponse est écrite", text: "« Est-ce que c'est dans la marque ? » ne se discute plus en réunion. La règle tranche.", image: "/accueil/equipe-1.jpg" },
+      { title: "Changer une fois", text: "Vous modifiez une règle à un seul endroit. Le site, les posts et les agents suivent.", image: "/accueil/equipe-2.jpg" },
+      { title: "Plus de chasse aux documents", text: "La bonne couleur, le bon prix, la bonne formule : tout est au même endroit.", image: "/accueil/equipe-3.jpg" },
     ],
   },
   {
     tab: "Votre agence",
     cards: [
       { title: "Les règles dès le premier jet", text: "Un prestataire arrive avec le Brand OS. Il démarre dans la marque.", dark: true },
-      { title: "Un brand-check avant l'envoi", text: "Vos prestataires relisent leur travail avec vos règles avant de vous l'envoyer.", image: "/travaux/slayyy/chrome.jpg" },
-      { title: "Moins de recadrage", text: "Le brief tient en un dossier. Les allers-retours portent sur les idées, plus sur la charte.", image: "/travaux/pollen/banner.jpg" },
-      { title: "Des faits, pas des suppositions", text: "Un nom, un prix, une date : une seule source, jamais réinventée.", image: "/travaux/julie/c1.jpg" },
+      { title: "Un brand-check avant l'envoi", text: "Vos prestataires relisent leur travail avec vos règles avant de vous l'envoyer.", image: "/accueil/agence-1.jpg" },
+      { title: "Moins de recadrage", text: "Le brief tient en un dossier. Les allers-retours portent sur les idées, plus sur la charte.", image: "/accueil/agence-2.jpg" },
+      { title: "Des faits, pas des suppositions", text: "Un nom, un prix, une date : une seule source, jamais réinventée.", image: "/accueil/agence-3.jpg" },
     ],
   },
   {
     tab: "Vos agents IA",
     cards: [
       { title: "Vos agents respectent la marque", text: "Le Brand OS se branche dans Claude et ChatGPT. Ils écrivent avec votre voix, vos faits, votre lexique.", dark: true },
-      { title: "Plus de faits inventés", text: "Un chiffre absent des faits ne s'écrit pas. L'agent demande au lieu d'inventer.", image: "/travaux/julie/c3.jpg" },
-      { title: "Contre l'AI slop", text: "Ce qui rend votre marque unique est écrit. Il ne se dilue pas dans le générique.", image: "/travaux/inavoue/campagne.jpg" },
-      { title: "Une règle, partout", text: "Les mêmes règles pour le site, les posts, les e-mails et les agents.", image: "/travaux/slayyy/p1.jpg" },
+      { title: "Plus de faits inventés", text: "Un chiffre absent des faits ne s'écrit pas. L'agent demande au lieu d'inventer.", image: "/accueil/agents-2.jpg" },
+      { title: "Contre l'AI slop", text: "Ce qui rend votre marque unique est écrit. Il ne se dilue pas dans le générique.", image: "/accueil/agents-3.jpg" },
+      { title: "Une règle, partout", text: "Les mêmes règles pour le site, les posts, les e-mails et les agents.", image: "/accueil/agents-4.jpg" },
     ],
   },
 ];

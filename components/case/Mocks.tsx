@@ -53,7 +53,7 @@ function SlayyyMock(p: MockProps) {
           </span>
         </Spot>
         <div style={{ marginTop: 16, height: 240, borderRadius: 16, overflow: "hidden", position: "relative", background: hex(c, "lavande") }}>
-          <img src="/travaux/slayyy/p2.jpg" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "blur(14px)", transform: "scale(1.15)" }} />
+          {c.brandCheck?.src && <img src={c.brandCheck.src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: c.brandCheck.focus, filter: "blur(14px)", transform: "scale(1.15)" }} />}
           <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 600, fontSize: 14 }}>
             Poste pour débloquer
           </span>
@@ -78,7 +78,7 @@ function JulieMock(p: MockProps) {
   return (
     <div className="mock" style={{ background: paper, color: ink, padding: 24, fontFamily: "var(--sr-font-body)", border: `1px solid ${hex(c, "pêche")}` }}>
       <div className="mock__content">
-        <img src="/travaux/julie/c2.jpg" alt="" style={{ width: "100%", height: 150, objectFit: "cover" }} />
+        {c.brandCheck?.src && <img src={c.brandCheck.src} alt="" style={{ width: "100%", height: 150, objectFit: "cover", objectPosition: c.brandCheck.focus }} />}
         <Spot {...p} id="noir" label="le titre" style={{ marginTop: 18 }}>
           <span style={{ display: "block", fontFamily: "'Newsreader', serif", fontSize: 28, lineHeight: 1.1, color: p.fixed ? ink : MOCK_WRONG.julieBlack }}>
             Offrez à votre corps un vrai temps pour lui.
@@ -107,7 +107,7 @@ function InavoueMock(p: MockProps) {
     <div className="mock" style={{ padding: 24, color: hex(c, "bordeaux"), fontFamily: "var(--sr-font-body)" }}>
       <Spot {...p} id="blanc" label="le fond de la fiche" bg style={{ background: p.fixed ? ecru : MOCK_WRONG.inavoueWhite, border: `1px solid ${ecru}` }} />
       <div className="mock__content">
-        <img src="/travaux/inavoue/c3.jpg" alt="" style={{ width: "100%", height: 230, objectFit: "cover" }} />
+        {c.brandCheck?.src && <img src={c.brandCheck.src} alt="" style={{ width: "100%", height: 230, objectFit: "cover", objectPosition: c.brandCheck.focus }} />}
         <Spot {...p} id="capitales" label="le nom" style={{ marginTop: 18 }}>
           {p.fixed ? (
             <InavoueLogo color={cobalt} className="mock-logo" />

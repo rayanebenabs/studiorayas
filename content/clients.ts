@@ -1,10 +1,14 @@
 // Les cas clients. Les couleurs et polices listées ici sont celles des clients :
 // elles s'affichent dans leur cas comme des travaux montrés (voir brand/BRAND.md, section 7, règle 8).
+// Les images des cas sont rangées à part, dans content/images.ts.
+
+import { CASE_IMAGES } from "./images";
 
 export type ClientSlug = "slayyy" | "julie-leroy" | "inavoue" | "pollen";
 
 export interface Visual {
   src?: string; // image dans public/
+  focus?: string; // point gardé au recadrage, ex. "50% 20%"
   logo?: "inavoue"; // logo vectoriel rendu en SVG
   bg?: string;
   fg?: string;
@@ -14,7 +18,6 @@ export interface Visual {
 
 export interface Client {
   slug: ClientSlug;
-  folder: string;
   name: string;
   sector: string;
   signature: string;
@@ -26,6 +29,7 @@ export interface Client {
   collage: [Visual, Visual, Visual];
   brandingTitle: string;
   branding: { visual: Visual; span: 1 | 2 }[][];
+  brandCheck?: Visual;
   logoTiles: { bg: string; fg: string }[];
   logoFont: string; // famille CSS pour l'aperçu du logo
   logoText: string;
@@ -36,16 +40,9 @@ export interface Client {
   check: { id: string; title: string; rule: string }[];
 }
 
-const img = (folder: string, file: string, alt: string, caption?: string): Visual => ({
-  src: `/travaux/${folder}/${file}.jpg`,
-  alt,
-  caption,
-});
-
 export const CLIENTS: Client[] = [
   {
     slug: "slayyy",
-    folder: "slayyy",
     name: "Slayyy",
     sector: "Application sociale · la tenue du jour entre amis",
     signature: "Everybody slayyy, every dayyy.",
@@ -54,27 +51,10 @@ export const CLIENTS: Client[] = [
     online: "slayyy.app",
     href: "https://slayyy.app",
     nameScale: 1,
-    collage: [
-      img("slayyy", "c1", "Portrait en duotone framboise, wordmark Slayyy"),
-      img("slayyy", "c2", "Portrait en duotone framboise, lunettes noires"),
-      img("slayyy", "c3", "Portrait en duotone framboise devant un miroir"),
-    ],
+    collage: CASE_IMAGES["slayyy"].collage,
     brandingTitle: "Une marque qui sent le groupe de potes, pas le magazine de mode.",
-    branding: [
-      [
-        { visual: img("slayyy", "logo", "Wordmark Slayyy et son étoile", "Wordmark Slayyy et étoile scintillante"), span: 2 },
-        { visual: img("slayyy", "icon", "Icône de l'application sur un écran de téléphone", "Icône d'application"), span: 1 },
-      ],
-      [
-        { visual: img("slayyy", "p1", "Affiche Slayyy, silhouettes sur fond rose", "Affiche : « Slayyy » répété, silhouettes"), span: 1 },
-        { visual: img("slayyy", "p2", "Affiche Slayyy, une bande de quatre silhouettes", "Affiche : une bande, un jour"), span: 1 },
-        { visual: img("slayyy", "p3", "Affiche Slayyy, trois silhouettes", "Affiche : silhouettes sur paper"), span: 1 },
-      ],
-      [
-        { visual: img("slayyy", "chrome", "Kit d'icônes chromées roses", "Kit d'icônes chromées"), span: 2 },
-        { visual: img("slayyy", "app", "Monogramme S de Slayyy", "Monogramme"), span: 1 },
-      ],
-    ],
+    branding: CASE_IMAGES["slayyy"].branding,
+    brandCheck: CASE_IMAGES["slayyy"].brandCheck,
     logoTiles: [
       { bg: "#B2173B", fg: "#F7F2F3" },
       { bg: "#F7F2F3", fg: "#1B2020" },
@@ -106,7 +86,6 @@ export const CLIENTS: Client[] = [
   },
   {
     slug: "julie-leroy",
-    folder: "julie",
     name: "Julie Leroy",
     sector: "Drainage lymphatique à domicile · Rouen",
     signature: "Offrir à son corps un vrai temps pour lui.",
@@ -115,23 +94,10 @@ export const CLIENTS: Client[] = [
     online: "julieleroy.fr",
     href: "https://julieleroy.fr",
     nameScale: 0.62,
-    collage: [
-      img("julie", "c1", "Le soleil de Julie Leroy, crème sur fond terracotta"),
-      img("julie", "c2", "Logo Julie Leroy sur une photo de plage au coucher du soleil"),
-      img("julie", "c3", "Publication : jambes lourdes, fatigue, besoin de légèreté ?"),
-    ],
+    collage: CASE_IMAGES["julie-leroy"].collage,
     brandingTitle: "Une maison plutôt qu'une cabine.",
-    branding: [
-      [
-        { visual: img("julie", "logo", "Logo Julie Leroy, drainage lymphatique manuel", "Logo et signature « Drainage lymphatique manuel »"), span: 1 },
-        { visual: img("julie", "home", "Le site julieleroy.fr sur un ordinateur portable", "Site julieleroy.fr"), span: 1 },
-      ],
-      [
-        { visual: img("julie", "photo1", "Croquis du logo : spirale et rayons de soleil", "Croquis du logo"), span: 1 },
-        { visual: img("julie", "photo2", "Moodboard organique, floral et serein", "Moodboard"), span: 1 },
-        { visual: img("julie", "print", "Cartes de visite recto et verso", "Cartes de visite"), span: 1 },
-      ],
-    ],
+    branding: CASE_IMAGES["julie-leroy"].branding,
+    brandCheck: CASE_IMAGES["julie-leroy"].brandCheck,
     logoTiles: [
       { bg: "#FBF6DF", fg: "#D37431" },
       { bg: "#D37431", fg: "#FBF6DF" },
@@ -166,7 +132,6 @@ export const CLIENTS: Client[] = [
   },
   {
     slug: "inavoue",
-    folder: "inavoue",
     name: "L'Inavoué",
     sector: "Bracelets en morse · un mot sur un cordon",
     signature: "Des bijoux qui se disent autrement.",
@@ -174,23 +139,10 @@ export const CLIENTS: Client[] = [
     deliverables: "Diagnostic, identité, Brand OS",
     online: "Lancement en novembre 2026",
     nameScale: 0.78,
-    collage: [
-      img("inavoue", "c1", "Le bracelet porté, bras levé sur un ciel bleu"),
-      { logo: "inavoue", bg: "#F5EEDC", fg: "#041663", alt: "Logo l'inavoué" },
-      img("inavoue", "c3", "Le bracelet posé sur un papier orange froissé"),
-    ],
+    collage: CASE_IMAGES["inavoue"].collage,
     brandingTitle: "Une maison de mode, pour un mot en morse.",
-    branding: [
-      [
-        { visual: { logo: "inavoue", bg: "#041663", fg: "#F5EEDC", alt: "Logo l'inavoué en écru sur cobalt", caption: "Logo l'inavoué ▬●" }, span: 1 },
-        { visual: img("inavoue", "bracelet", "Deux mains, un bracelet en morse au poignet", "Le bracelet au poignet, un mot en morse"), span: 1 },
-      ],
-      [
-        { visual: img("inavoue", "colis", "Enveloppe crème fermée par un cachet de cire au signe ▬●", "Enveloppe et cachet de cire ▬●"), span: 1 },
-        { visual: img("inavoue", "campagne", "Une main posée sur un oreiller, le bracelet au poignet", "Campagne : le bracelet porté"), span: 1 },
-        { visual: img("inavoue", "guide", "Le logo l'inavoué gaufré sur un papier crème", "Logo gaufré sur papier"), span: 1 },
-      ],
-    ],
+    branding: CASE_IMAGES["inavoue"].branding,
+    brandCheck: CASE_IMAGES["inavoue"].brandCheck,
     logoTiles: [
       { bg: "#041663", fg: "#F5EEDC" },
       { bg: "#F5EEDC", fg: "#041663" },
@@ -222,7 +174,6 @@ export const CLIENTS: Client[] = [
   },
   {
     slug: "pollen",
-    folder: "pollen",
     name: "Pollen Agency",
     sector: "Agence d'influence créative",
     signature: "Influence, création et marques à impact.",
@@ -231,22 +182,10 @@ export const CLIENTS: Client[] = [
     online: "thepollen.agency",
     href: "https://thepollen.agency",
     nameScale: 0.5,
-    collage: [
-      img("pollen", "c1", "Le site thepollen.agency"),
-      img("pollen", "c2", "Le double l de Pollen, tracé en noir"),
-      img("pollen", "c3", "Le double l de Pollen en dégradé orange sur fond anthracite"),
-    ],
+    collage: CASE_IMAGES["pollen"].collage,
     brandingTitle: "La traînée d'une abeille en vol.",
-    branding: [
-      [
-        { visual: img("pollen", "logo", "Logo Pollen Agency, le double l en boucle", "Logo : le double l en boucle"), span: 1 },
-        { visual: img("pollen", "trainee", "Le double l en dégradé orange", "Le double l : la traînée d'une abeille en vol"), span: 1 },
-      ],
-      [
-        { visual: img("pollen", "banner", "Logo Pollen blanc sur fond orange", "Logo blanc sur orange"), span: 2 },
-        { visual: img("pollen", "site", "Le site thepollen.agency", "Site thepollen.agency"), span: 1 },
-      ],
-    ],
+    branding: CASE_IMAGES["pollen"].branding,
+    brandCheck: CASE_IMAGES["pollen"].brandCheck,
     logoTiles: [
       { bg: "#FDF7F1", fg: "#2E2E2E" },
       { bg: "#FC672A", fg: "#FDF7F1" },
