@@ -1,5 +1,5 @@
-/* Généré par brand-build depuis tokens.json (Studio Rayas v1.1.0). Ne pas modifier : modifier tokens.json puis relancer le build. */
-export const meta = {"name":"Studio Rayas","version":"1.1.0","prefix":"sr"};
+/* Généré par brand-build depuis tokens.json (Studio Rayas v1.2.0). Ne pas modifier : modifier tokens.json puis relancer le build. */
+export const meta = {"name":"Studio Rayas","version":"1.2.0","prefix":"sr"};
 export const tokens = {
   "light": {
     "color": {

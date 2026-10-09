@@ -87,7 +87,7 @@ export function Steps() {
         const at = 1.3 + i * 0.07;
         t.fromTo(el, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.08 }, at);
         const sw = el.querySelector(".os-code__swatch");
-        if (sw) t.fromTo(sw, { scale: 0 }, { scale: 1, duration: 0.06, ease: "back.out(2)" }, at + 0.08);
+        if (sw) t.fromTo(sw, { scale: 0 }, { scale: 1, duration: 0.06, ease: "expo.out" }, at + 0.08);
       });
       t.fromTo(q(".os-code__quote"), { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.12 }, 1.85);
 

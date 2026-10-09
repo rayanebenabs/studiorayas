@@ -1,4 +1,4 @@
-// Généré par brand-build depuis tokens.json (Studio Rayas v1.1.0). Ne pas modifier : modifier tokens.json puis relancer le build.
+// Généré par brand-build depuis tokens.json (Studio Rayas v1.2.0). Ne pas modifier : modifier tokens.json puis relancer le build.
 module.exports = {
   "theme": {
     "extend": {

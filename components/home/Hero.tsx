@@ -80,12 +80,12 @@ export function Hero() {
       const paths = gsap.utils.toArray<SVGPathElement>(".hero__outline path");
       const intro = gsap.timeline({ delay: 0.1 });
       intro
-        .fromTo(paths, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.8, ease: "power2.inOut", stagger: 0.12 }, 0)
+        .fromTo(paths, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut", stagger: 0.1 }, 0)
         .set(".hero__title", { opacity: 1 }, 0.55)
         .fromTo(".hero__title .w > span", { yPercent: 110 }, { yPercent: 0, duration: 1.1, ease: "expo.out", stagger: 0.06 }, 0.55)
-        .fromTo(wheelIntro.current, { rotation: 28, opacity: 0 }, { rotation: 0, opacity: 1, duration: 1.6, ease: "expo.out" }, 0.45)
+        .fromTo(wheelIntro.current, { rotation: 28, opacity: 0 }, { rotation: 0, opacity: 1, duration: 1.4, ease: "expo.out" }, 0.4)
         .fromTo(".site-header__inner > *", { y: -14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out", stagger: 0.08 }, 0.3)
-        .fromTo("[data-intro]", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", stagger: 0.08 }, 0.9);
+        .fromTo("[data-intro]", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.06 }, 0.8);
 
       // Les règles défilent en continu à l'intérieur du totem.
       gsap.to(ticker.current, { y: -RULE_GAP * 2, duration: 6, ease: "none", repeat: -1 });

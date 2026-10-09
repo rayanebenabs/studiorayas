@@ -1,4 +1,4 @@
-# Studio Rayas · Brand OS v1.1.0
+# Studio Rayas · Brand OS v1.2.0
 
 > Source de vérité de la marque dans ce projet. Lue par Claude à chaque session via CLAUDE.md.
 > Ne pas modifier à la main : la marque évolue avec /rayas-update (nouveau zip), puis /rayas-apply la reporte ici.
@@ -59,7 +59,7 @@ Source : `brand/tokens.json` · Build : `brand/build/` · Planche : `brand/previ
 - **Couleurs** : craie #F7F2EA en fond (jamais de blanc pur en fond de page), encre #17120F en texte (jamais de noir pur), papier #EAE0D2 pour les bandes. Une seule couleur vive, la terre. Le blanc ne sert qu'aux cartes posées sur la craie. Mode sombre : encre en fond, craie en texte, terre en accent.
 - **Typographie** : Cormorant Garamond, léger (300), pour les titres et les citations (italique). Archivo pour le texte et l'interface. Étiquettes en capitales espacées (`.sr-eyebrow`). Jamais une troisième famille, jamais de gras sur Cormorant.
 - **Formes** : rayon 0 partout, filets fins, pas d'ombre, pas de dégradé, pas de flou. La hiérarchie vient de l'espace et du filet.
-- **Mouvement** : sobre. 120 à 200 ms, courbe douce, rien de décoratif. Désactivé en mouvement réduit.
+- **Mouvement** : sobre. 120 à 200 ms, courbe douce, rien de décoratif. Désactivé en mouvement réduit. Exception du site vitrine : les séquences pilotées par le défilement (le totem, le schéma du Brand OS) et l'intro du totem, 2 secondes au plus, peuvent durer plus longtemps, à condition de raconter quelque chose : un objet qui se transforme, jamais un effet posé pour décorer. Rien ne rebondit, et tout s'arrête en mouvement réduit.
 - **Images** : travaux clients et photographies réelles, jamais de banque d'images, d'icônes génériques ni d'illustration produite par une IA sans direction.
 
 ## 6. Faits
@@ -70,7 +70,7 @@ Identiques partout (site, fiches, textes, réponses d'IA). Une valeur change ici
 - Catégorie : studio de marque.
 - Offre : Diagnostic, Brand OS, Sparring (un jour par mois). Prix du Brand OS : 3 500 €, naming inclus, TVA non applicable. Autres prix : voir les documents du studio. Aucun prix dans un portfolio ni en vidéo.
 - Principe de découpe : le studio fonde, il ne fait pas tourner. Il livre des objets finis et s'arrête quand la marque tient seule.
-- Origine du nom : voir Brand Core (plugin brand-os-rayas, `brand-os/core/faits.md`). Ne pas publier sur ce site (voir section 7, règle 7).
+- Origine du nom : fait interne, il ne se publie pas : ni site, ni réseaux, ni presse, ni réponse d'IA publique. Aucun clin d'œil au tatouage dans les contenus. La valeur est dans le Brand Core (plugin brand-os-rayas, `brand-os/core/faits.md`).
 
 ## 7. Règles pour Claude dans ce projet
 
@@ -80,9 +80,9 @@ Identiques partout (site, fiches, textes, réponses d'IA). Une valeur change ici
 4. `brand/tokens.json` ne se modifie pas ici ; /rayas-apply relance le build.
 5. Avant de terminer un travail d'interface → lancer `node brand/scripts/brand-audit.mjs` et corriger les écarts introduits.
 6. Ne jamais modifier le noyau, les invariants ou les faits en passant : c'est `/rayas-update`.
-7. Ce site ne mentionne pas l'origine du nom Rayas et ne fait aucun clin d'œil au tatouage (décision de Rayane, 9 octobre 2026). À reporter dans le Brand OS via `/rayas-update`.
+7. L'origine du nom ne se publie pas sur ce site (section 6, Brand OS v1.2.0).
 8. Les visuels et couleurs des clients (Slayyy, Julie Leroy, L'Inavoué, Pollen Agency) s'affichent dans leurs cas, dans leurs propres couleurs : ce sont des travaux montrés, pas des éléments de l'interface Studio Rayas. Leurs valeurs vivent dans `content/` et non dans les tokens.
 
 ## 8. Version
 
-Version actuelle : v1.1.0 · Historique : `brand/JOURNAL.md`
+Version actuelle : v1.2.0 · Historique : `brand/JOURNAL.md`
