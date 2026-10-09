@@ -12,7 +12,7 @@ const EYE = 1.6;
 const HANG = 1.65; // centre des tableaux
 const WALL_H = 4.4;
 const WIDTH = 14;
-const SPACING = 4.6;
+const SPACING = 3.4;
 const RADIUS = 0.35; // le visiteur
 const SPEED = 2.6;
 
@@ -394,7 +394,7 @@ export function createGallery(canvas: HTMLCanvasElement, artworks: Artwork[], cb
         if (seen.has(i)) return;
         toArt.set(c.pos.x - view.x, c.pos.y - EYE, c.pos.z - view.z);
         const d = toArt.length();
-        if (d < 4.6 && toArt.normalize().dot(forward) > 0.88) {
+        if (d < 5.5 && toArt.normalize().dot(forward) > 0.88) {
           seen.add(i);
           cb.onSeen(i);
         }

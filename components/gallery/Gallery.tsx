@@ -349,7 +349,7 @@ export function Gallery() {
           <ol className="gallery-list">
             {ARTWORKS.map((a, i) => (
               <li key={i}>
-                <div className="gallery-list__media">{a.src ? <img src={a.src} alt={a.title} loading="lazy" /> : null}</div>
+                <div className="gallery-list__media">{a.src ? <img src={a.src} alt={a.alt ?? a.title} loading="lazy" /> : null}</div>
                 <p className="gallery-list__n">{String(i + 1).padStart(2, "0")}</p>
                 <p className="gallery-list__title">{a.title}</p>
                 <p className="muted">{a.src ? [a.year, a.technique].filter(Boolean).join(" · ") : "Bientôt accrochée"}</p>
