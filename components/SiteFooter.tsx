@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BRAND_LINE } from "@/content/site";
 
 export function SiteFooter() {
@@ -6,6 +7,7 @@ export function SiteFooter() {
       <div className="site-footer__inner">
         <span>Studio Rayas · studio de marque</span>
         <em>{BRAND_LINE}</em>
+        <Link href="/galerie/" className="site-footer__link">Galerie</Link>
         <small>© 2026</small>
       </div>
     </footer>

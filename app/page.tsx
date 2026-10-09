@@ -5,6 +5,7 @@ import { Steps } from "@/components/home/Steps";
 import { Usages } from "@/components/home/Usages";
 import { Benefits } from "@/components/home/Benefits";
 import { Work } from "@/components/home/Work";
+import { GalleryTeaser } from "@/components/home/GalleryTeaser";
 import { Owned } from "@/components/home/Owned";
 import { Contact } from "@/components/home/Contact";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -19,6 +20,7 @@ export default function Home() {
       <Usages />
       <Benefits />
       <Work />
+      <GalleryTeaser />
       <Owned />
       <Contact />
       <SiteFooter />

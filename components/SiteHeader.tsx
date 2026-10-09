@@ -15,6 +15,7 @@ export function SiteHeader({ home = false }: { home?: boolean }) {
             <li><a href={`${base}#methode`}>Méthode</a></li>
             <li><a href={`${base}#travaux`}>Travaux</a></li>
             <li><a href={`${base}#studio`}>Studio</a></li>
+            <li><Link href="/galerie/">Galerie</Link></li>
           </ul>
         </nav>
         <a className="site-header__cta" href={`${base}#contact`}>
