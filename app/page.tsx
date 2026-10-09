@@ -4,7 +4,6 @@ import { Manifesto } from "@/components/home/Manifesto";
 import { Steps } from "@/components/home/Steps";
 import { Usages } from "@/components/home/Usages";
 import { Benefits } from "@/components/home/Benefits";
-import { Playground } from "@/components/home/Playground";
 import { Work } from "@/components/home/Work";
 import { Owned } from "@/components/home/Owned";
 import { Contact } from "@/components/home/Contact";
@@ -19,7 +18,6 @@ export default function Home() {
       <Steps />
       <Usages />
       <Benefits />
-      <Playground />
       <Work />
       <Owned />
       <Contact />

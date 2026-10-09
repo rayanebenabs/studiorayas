@@ -190,6 +190,10 @@ export function Steps() {
                 </li>
               ))}
             </ol>
+            <div className="steps__current" aria-live="polite">
+              <strong>{STEPS[active].title}</strong>
+              <p>{STEPS[active].text}</p>
+            </div>
           </div>
 
           <div className="steps__panel" aria-hidden="true">

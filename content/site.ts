@@ -109,26 +109,3 @@ export const WHY_US = [
   "Chaque recommandation est chiffrée dans un modèle économique.",
   "Le terrain des créateurs : on sait comment une marque tient devant une vraie audience.",
 ];
-
-// Brand-check de la section « Essayez » : le lexique interdit du Brand OS Studio Rayas, appliqué en direct.
-export const PLAYGROUND_RULES: { id: string; label: string; pattern: RegExp; why: string }[] = [
-  { id: "solution", label: "solution", pattern: /\bsolutions?\b/gi, why: "Mot interdit : il ne dit rien de ce que vous faites." },
-  { id: "disruptif", label: "disruptif", pattern: /\bdisrupti(?:f|ve|fs|ves)\b/gi, why: "Mot interdit : de l'emphase d'agence." },
-  { id: "booster", label: "booster", pattern: /\bboost(?:er|e|ez|ons|é|ée|és|ées)?\b/gi, why: "Mot interdit : du vocabulaire de vendeur." },
-  { id: "360", label: "360°", pattern: /360\s?°?/g, why: "Mot interdit : une promesse creuse." },
-  { id: "cle", label: "clé en main", pattern: /cl[ée]s?\s+en\s+main/gi, why: "Mot interdit : une promesse creuse." },
-  { id: "mesure", label: "accompagnement sur mesure", pattern: /accompagnements?\s+sur[\s-]mesure/gi, why: "Formule creuse : dites ce que vous faites." },
-  { id: "magique", label: "magique", pattern: /\bmagiques?\b/gi, why: "Interdit pour parler d'IA : elle applique des règles." },
-  { id: "ecosysteme", label: "écosystème", pattern: /[ée]cosyst[èe]mes?/gi, why: "Interdit employé seul : précisez lequel." },
-  { id: "exclamation", label: "!", pattern: /!/g, why: "Le ton est direct, chaleureux sans effusion." },
-  { id: "tiret", label: "tiret cadratin", pattern: /—/g, why: "Pas de tiret cadratin : des virgules et des points." },
-  { id: "tu", label: "tutoiement", pattern: /(?<!\p{L})(?:tu|toi|ton|ta|tes)(?!\p{L})|(?<!\p{L})t['’](?=\p{L})/giu, why: "Le studio vouvoie, toujours." },
-];
-
-export const PLAYGROUND_DEFAULT = "Nous proposons une solution 360° pour booster votre marque !";
-
-export const PLAYGROUND_SUGGESTIONS = [
-  "Vous repartez avec les règles, pas seulement le logo.",
-  "Commencer par un diagnostic.",
-  "Une marque qui tient sans son auteur.",
-];
