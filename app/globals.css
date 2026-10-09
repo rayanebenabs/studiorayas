@@ -607,6 +607,10 @@ p {
   align-items: center;
 }
 
+.steps .title-lg {
+  font-size: clamp(2rem, 3.3vw, 3.5rem);
+}
+
 .steps__list {
   list-style: none;
   margin: var(--sr-space-8) 0 0;
