@@ -1,76 +1,140 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 import { BRAND_LINE, PHASES } from "@/content/site";
+import { TOTEM_PATHS, TOTEM_TRANSFORM, TOTEM_VIEWBOX } from "@/lib/totem";
 import { SiteHeader } from "../SiteHeader";
-import { Totem, type TotemMode } from "../Totem";
-
-// Cinq totems superposés, un par phase. Seule la matière change, jamais la teinte (une seule couleur vive : la terre).
-const LAYERS: { mode: TotemMode; tone: string }[] = [
-  { mode: "trait", tone: "t-encre" },
-  { mode: "plein", tone: "t-encre" },
-  { mode: "regles", tone: "t-encre" },
-  { mode: "plein", tone: "t-terre" },
-  { mode: "plein", tone: "t-craie" },
-];
 
 const STEP = 36; // degrés entre deux cartes : 10 cartes, chaque service apparaît deux fois sur la roue
 const LAST = PHASES.length - 1;
+const VB_H = 16000;
+const RULES =
+  "couleur.fond = craie · accent = terre, un par écran · rayon = 0 · ombre = aucune · dégradé = aucun · titre = Cormorant 300 · texte = Archivo · adresse = vous · ";
+const RULE_GAP = 250;
 
+/**
+ * Le hero : un seul totem dont la matière change à chaque phase, par volets.
+ * 01 trait · 02 l'encre monte · 03 l'encre se retire sur les règles · 04 la terre monte · 05 la nuit s'ouvre.
+ */
 export function Hero() {
   const root = useRef<HTMLElement>(null);
   const wheel = useRef<HTMLDivElement>(null);
-  const layers = useRef<(HTMLDivElement | null)[]>([]);
-  const cardEls = useRef<(HTMLDivElement | null)[]>([]);
+  const wheelIntro = useRef<HTMLDivElement>(null);
+  const totem = useRef<HTMLDivElement>(null);
+  const night = useRef<HTMLDivElement>(null);
+  const rules = useRef<SVGGElement>(null);
+  const ticker = useRef<SVGGElement>(null);
+  const fills = useRef<(SVGRectElement | null)[]>([]);
+  const cards = useRef<(HTMLDivElement | null)[]>([]);
+  const segs = useRef<(HTMLSpanElement | null)[]>([]);
+  const phaseText = useRef<HTMLDivElement>(null);
+  const tl = useRef<gsap.core.Timeline | null>(null);
   const trigger = useRef<ScrollTrigger | null>(null);
   const [phase, setPhase] = useState(0);
+  const first = useRef(true);
 
-  // Pose l'état d'une phase sans défilement (mouvement réduit ou petit écran sans épinglage).
-  const applyStatic = useCallback((i: number) => {
-    gsap.set(wheel.current, { rotation: -i * STEP });
-    layers.current.forEach((el, k) => gsap.set(el, { opacity: k === i ? 1 : 0 }));
-    cardEls.current.forEach((el, k) => gsap.set(el, { opacity: k === i ? 0 : 1 }));
-    setPhase(i);
+  const buildTimeline = useCallback(() => {
+    const [encre, terre, craie] = fills.current;
+    const t = gsap.timeline({ paused: true, defaults: { ease: "none" } });
+    t.to(wheel.current, { rotation: -LAST * STEP, duration: LAST }, 0);
+
+    // 01 → 02 : l'encre remplit le totem de bas en haut.
+    t.fromTo(encre, { attr: { y: VB_H } }, { attr: { y: 0 }, duration: 0.6, ease: "power3.inOut" }, 0.35);
+    t.set(rules.current, { opacity: 1 }, 0.95);
+    // 02 → 03 : l'encre se retire vers le haut et découvre les règles.
+    t.to(encre, { attr: { y: -VB_H }, duration: 0.6, ease: "power3.inOut" }, 1.35);
+    // 03 → 04 : la terre monte.
+    t.fromTo(terre, { attr: { y: VB_H } }, { attr: { y: 0 }, duration: 0.6, ease: "power3.inOut" }, 2.35);
+    // 04 → 05 : la nuit s'ouvre en cercle depuis le totem, le totem passe en craie.
+    t.fromTo(night.current, { clipPath: "circle(0% at 50% 44%)" }, { clipPath: "circle(150% at 50% 44%)", duration: 0.7, ease: "power3.inOut" }, 3.3);
+    t.fromTo(craie, { attr: { y: VB_H } }, { attr: { y: 0 }, duration: 0.6, ease: "power3.inOut" }, 3.35);
+
+    // Le totem respire à chaque passage.
+    for (let i = 1; i <= LAST; i++) {
+      t.to(totem.current, { scale: 0.965, duration: 0.3, ease: "power2.inOut" }, i - 0.65);
+      t.to(totem.current, { scale: 1, duration: 0.35, ease: "power2.out" }, i - 0.3);
+    }
+    // La carte du service en cours passe derrière le totem : elle s'efface pendant qu'elle y est.
+    gsap.set(cards.current[0], { opacity: 0 });
+    for (let k = 0; k <= LAST; k++) {
+      if (k > 0) t.to(cards.current[k], { opacity: 0, duration: 0.3 }, k - 0.45);
+      if (k < LAST) t.to(cards.current[k], { opacity: 1, duration: 0.3 }, k + 0.15);
+    }
+    // La progression se remplit avec le défilement.
+    segs.current.forEach((s, i) => {
+      if (i === 0) gsap.set(s, { scaleX: 1 });
+      else t.fromTo(s, { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power2.inOut" }, i - 0.6);
+    });
+    return t;
   }, []);
 
   useLayoutEffect(() => {
     if (!root.current) return;
-    if (prefersReducedMotion()) {
-      applyStatic(0);
-      return;
-    }
+    const reduced = prefersReducedMotion();
     const ctx = gsap.context(() => {
-      layers.current.forEach((el, k) => gsap.set(el, { opacity: k === 0 ? 1 : 0 }));
-      const tl = gsap.timeline({ defaults: { ease: "none" } });
-      tl.to(wheel.current, { rotation: -LAST * STEP, duration: LAST }, 0);
-      for (let i = 1; i <= LAST; i++) {
-        tl.to(layers.current[i - 1], { opacity: 0, duration: 0.35 }, i - 0.6);
-        tl.to(layers.current[i], { opacity: 1, duration: 0.35 }, i - 0.6);
-      }
-      // La carte du service en cours passe derrière le totem : on l'efface pendant qu'elle y est.
-      gsap.set(cardEls.current[0], { opacity: 0 });
-      for (let k = 0; k <= LAST; k++) {
-        const card = cardEls.current[k];
-        if (k > 0) tl.to(card, { opacity: 0, duration: 0.3 }, k - 0.45);
-        if (k < LAST) tl.to(card, { opacity: 1, duration: 0.3 }, k + 0.15);
-      }
+      tl.current = buildTimeline();
+      if (reduced) return;
+
+      // Intro : le totem se dessine, le titre monte mot par mot, la roue se pose.
+      const paths = gsap.utils.toArray<SVGPathElement>(".hero__outline path");
+      const intro = gsap.timeline({ delay: 0.1 });
+      intro
+        .fromTo(paths, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.8, ease: "power2.inOut", stagger: 0.12 }, 0)
+        .set(".hero__title", { opacity: 1 }, 0.55)
+        .fromTo(".hero__title .w > span", { yPercent: 110 }, { yPercent: 0, duration: 1.1, ease: "expo.out", stagger: 0.06 }, 0.55)
+        .fromTo(wheelIntro.current, { rotation: 28, opacity: 0 }, { rotation: 0, opacity: 1, duration: 1.6, ease: "expo.out" }, 0.45)
+        .fromTo(".site-header__inner > *", { y: -14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out", stagger: 0.08 }, 0.3)
+        .fromTo("[data-intro]", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", stagger: 0.08 }, 0.9);
+
+      // Les règles défilent en continu à l'intérieur du totem.
+      gsap.to(ticker.current, { y: -RULE_GAP * 2, duration: 6, ease: "none", repeat: -1 });
+
       trigger.current = ScrollTrigger.create({
         trigger: root.current,
         start: "top top",
         end: () => `+=${window.innerHeight * LAST * 0.9}`,
         pin: true,
-        scrub: 0.6,
-        animation: tl,
-        snap: { snapTo: 1 / LAST, inertia: false, duration: { min: 0.2, max: 0.5 }, ease: "power1.inOut" },
+        scrub: 0.8,
+        animation: tl.current,
+        snap: { snapTo: 1 / LAST, inertia: false, delay: 0.05, duration: { min: 0.25, max: 0.6 }, ease: "power2.inOut" },
         onUpdate: (self) => setPhase(Math.round(self.progress * LAST)),
       });
+
+      // Parallaxe légère à la souris.
+      if (window.matchMedia("(pointer: fine)").matches) {
+        const tx = gsap.quickTo(totem.current, "x", { duration: 0.8, ease: "power3.out" });
+        const ty = gsap.quickTo(totem.current, "y", { duration: 0.8, ease: "power3.out" });
+        const wx = gsap.quickTo(wheelIntro.current, "x", { duration: 1.1, ease: "power3.out" });
+        const onMove = (e: PointerEvent) => {
+          const nx = e.clientX / window.innerWidth - 0.5;
+          const ny = e.clientY / window.innerHeight - 0.5;
+          tx(nx * 14);
+          ty(ny * 10);
+          wx(nx * -22);
+        };
+        root.current?.addEventListener("pointermove", onMove);
+        return () => root.current?.removeEventListener("pointermove", onMove);
+      }
     }, root);
     return () => {
       trigger.current = null;
+      tl.current = null;
       ctx.revert();
     };
-  }, [applyStatic]);
+  }, [buildTimeline]);
+
+  // Le nom du service glisse dans son masque à chaque changement de phase.
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    if (!phaseText.current || prefersReducedMotion()) return;
+    const q = gsap.utils.selector(phaseText.current);
+    gsap.fromTo(q(".hero__mask > *"), { yPercent: 105 }, { yPercent: 0, duration: 0.7, ease: "expo.out", stagger: 0.05 });
+    gsap.fromTo(q(".hero__line"), { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", delay: 0.1 });
+  }, [phase]);
 
   const go = (i: number) => {
     const target = Math.max(0, Math.min(LAST, i));
@@ -78,62 +142,107 @@ export function Hero() {
     if (st) {
       window.scrollTo({ top: st.start + ((st.end - st.start) * target) / LAST, behavior: "instant" });
     } else {
-      applyStatic(target);
+      tl.current?.progress(target / LAST);
+      setPhase(target);
     }
   };
 
   const p = PHASES[phase];
-  const dark = p.totem === "nuit";
-  const cards = Array.from({ length: 10 }, (_, k) => PHASES[k % PHASES.length]);
+  const dark = phase === LAST;
+  const wheelCards = Array.from({ length: 10 }, (_, k) => PHASES[k % PHASES.length]);
+  const lines = Array.from({ length: 72 }, (_, i) => i);
 
   return (
     <section ref={root} className="hero" data-dark={dark} id="top" aria-label="Studio Rayas, studio de marque">
+      <div ref={night} className="hero__night" aria-hidden="true" />
       <SiteHeader home />
 
-      <div ref={wheel} className="hero__wheel" aria-hidden="true">
-        {cards.map((c, k) => (
-          <div
-            key={k}
-            ref={(el) => {
-              cardEls.current[k] = el;
-            }}
-            className="hero__card"
-            style={{ ["--a" as string]: `${k * STEP}deg`, opacity: k === 0 ? 0 : 1 }}
-          >
-            <span className="hero__card-n">{c.n}</span>
-            <span className="hero__card-name">{c.name}</span>
-          </div>
-        ))}
+      <div ref={wheelIntro} className="hero__wheel-intro" aria-hidden="true">
+        <div ref={wheel} className="hero__wheel">
+          {wheelCards.map((c, k) => (
+            <div
+              key={k}
+              ref={(el) => {
+                cards.current[k] = el;
+              }}
+              className="hero__card"
+              style={{ ["--a" as string]: `${k * STEP}deg`, opacity: k === 0 ? 0 : 1 }}
+            >
+              <span className="hero__card-n">{c.n}</span>
+              <span className="hero__card-name">{c.name}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="hero__totem">
-        {LAYERS.map((l, k) => (
-          <div
-            key={k}
-            ref={(el) => {
-              layers.current[k] = el;
-            }}
-            className={l.tone}
-            style={{ position: "absolute", inset: 0, opacity: k === 0 ? 1 : 0 }}
-          >
-            <Totem mode={l.mode} title={k === 0 ? "Totem Studio Rayas" : undefined} />
-          </div>
-        ))}
+      <div ref={totem} className="hero__totem">
+        <svg viewBox={TOTEM_VIEWBOX} role="img" aria-label="Totem Studio Rayas">
+          <defs>
+            <clipPath id="hero-totem-clip">
+              {TOTEM_PATHS.map((d) => (
+                <path key={d.slice(0, 24)} d={d} transform={TOTEM_TRANSFORM} />
+              ))}
+            </clipPath>
+          </defs>
+          <g clipPath="url(#hero-totem-clip)">
+            <g ref={rules} className="hero__rules" style={{ opacity: 0 }}>
+              <g ref={ticker}>
+                {lines.map((i) => (
+                  <text key={i} x={i % 2 ? -1200 : 0} y={260 + i * RULE_GAP} fontSize="190">
+                    {RULES.repeat(3)}
+                  </text>
+                ))}
+              </g>
+            </g>
+            {["encre", "terre", "craie"].map((c, i) => (
+              <rect
+                key={c}
+                ref={(el) => {
+                  fills.current[i] = el;
+                }}
+                x="0"
+                y={VB_H}
+                width="9000"
+                height={VB_H}
+                style={{ fill: `var(--sr-color-${c})` }}
+              />
+            ))}
+          </g>
+          <g className="hero__outline" transform={TOTEM_TRANSFORM}>
+            {TOTEM_PATHS.map((d) => (
+              <path key={d.slice(0, 24)} d={d} pathLength={1} strokeDasharray="1" />
+            ))}
+          </g>
+        </svg>
       </div>
 
-      <div className="hero__side hero__side--left" aria-live="polite">
-        <p className="sr-eyebrow">Studio de marque · service</p>
-        <p className="hero__phase">{p.name}</p>
-        <p className="hero__line">{p.line}</p>
-      </div>
-
-      <div className="hero__side hero__side--right">
-        <p className="hero__count">
-          {p.n} / 0{PHASES.length}
+      <div ref={phaseText} className="hero__side hero__side--left" aria-live="polite">
+        <p className="sr-eyebrow" data-intro>
+          Studio de marque · service
         </p>
+        <div className="hero__mask" data-intro>
+          <p className="hero__phase">{p.name}</p>
+        </div>
+        <p className="hero__line" data-intro>
+          {p.line}
+        </p>
+      </div>
+
+      <div className="hero__side hero__side--right" data-intro>
+        <div className="hero__mask">
+          <p className="hero__count">
+            {p.n} / 0{PHASES.length}
+          </p>
+        </div>
         <div className="hero__progress" aria-hidden="true">
           {PHASES.map((x, k) => (
-            <span key={x.n} data-on={k === phase} />
+            <span key={x.n}>
+              <i
+                ref={(el) => {
+                  segs.current[k] = el;
+                }}
+              />
+            </span>
           ))}
         </div>
         <div className="hero__arrows">
@@ -146,8 +255,18 @@ export function Hero() {
         </div>
       </div>
 
-      <h1 className="hero__title">{BRAND_LINE}</h1>
-      <p className="hero__hint">Faites défiler, ou utilisez les flèches.</p>
+      <h1 className="hero__title" aria-label={BRAND_LINE}>
+        {BRAND_LINE.split(" ").map((w, i) => (
+          <span key={i}>
+            <span className="w" aria-hidden="true">
+              <span>{w}</span>
+            </span>{" "}
+          </span>
+        ))}
+      </h1>
+      <p className="hero__hint" data-intro>
+        Faites défiler, ou utilisez les flèches.
+      </p>
     </section>
   );
 }
