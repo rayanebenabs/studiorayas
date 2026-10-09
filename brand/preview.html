@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio Rayas · système de marque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;display=swap">
+<style>
+/* Généré par brand-build depuis tokens.json (Studio Rayas v1.1.0). Ne pas modifier : modifier tokens.json puis relancer le build. */
+:root {
+  --sr-color-craie: #F7F2EA;
+  --sr-color-papier: #EAE0D2;
+  --sr-color-encre: #17120F;
+  --sr-color-blanc: #FFFFFF;
+  --sr-color-terre: #D9502E;
+  --sr-color-terre-profonde: #B33E20;
+  --sr-color-terre-braise: #8E2F17;
+  --sr-color-safran: #F2C14E;
+  --sr-color-ambre: #EE8B3E;
+  --sr-color-sauge: #9DBFB3;
+  --sr-color-azur: #7EA8C6;
+  --sr-color-mousse: #3F6B3C;
+  --sr-color-miel: #8A5A12;
+  --sr-color-brique: #9B1C2E;
+  --sr-color-mousse-claire: #8DBF86;
+  --sr-color-miel-clair: #E0B25A;
+  --sr-color-brique-claire: #E87A86;
+  --sr-color-nuit-2: #221C18;
+  --sr-color-cendre: #3A322C;
+  --sr-color-sable: #B8AD9D;
+  --sr-color-bg: var(--sr-color-craie);
+  --sr-color-surface: var(--sr-color-blanc);
+  --sr-color-surface-2: var(--sr-color-papier);
+  --sr-color-text: var(--sr-color-encre);
+  --sr-color-text-muted: #5E544B;
+  --sr-color-border: #C9BEAE;
+  --sr-color-accent: var(--sr-color-terre-profonde);
+  --sr-color-accent-hover: var(--sr-color-terre-braise);
+  --sr-color-accent-contrast: var(--sr-color-craie);
+  --sr-color-focus: var(--sr-color-terre-profonde);
+  --sr-color-success: var(--sr-color-mousse);
+  --sr-color-warning: var(--sr-color-miel);
+  --sr-color-danger: var(--sr-color-brique);
+  --sr-color-danger-contrast: var(--sr-color-craie);
+  --sr-font-display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --sr-font-body: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --sr-font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+  --sr-font-weight-light: 300;
+  --sr-font-weight-regular: 400;
+  --sr-font-weight-medium: 500;
+  --sr-font-weight-semibold: 600;
+  --sr-text-xs: 0.75rem;
+  --sr-text-sm: 0.875rem;
+  --sr-text-base: 1rem;
+  --sr-text-lg: 1.1875rem;
+  --sr-text-xl: 1.625rem;
+  --sr-text-2xl: 2.125rem;
+  --sr-text-3xl: 3rem;
+  --sr-text-4xl: 4rem;
+  --sr-text-5xl: 6rem;
+  --sr-leading-tight: 0.98;
+  --sr-leading-snug: 1.2;
+  --sr-leading-normal: 1.65;
+  --sr-tracking-tight: -0.01em;
+  --sr-tracking-normal: 0;
+  --sr-tracking-wide: 0.22em;
+  --sr-space-0: 0;
+  --sr-space-1: 0.25rem;
+  --sr-space-2: 0.5rem;
+  --sr-space-3: 0.75rem;
+  --sr-space-4: 1rem;
+  --sr-space-6: 1.5rem;
+  --sr-space-8: 2rem;
+  --sr-space-12: 3rem;
+  --sr-space-16: 4rem;
+  --sr-space-24: 6rem;
+  --sr-radius-none: 0;
+  --sr-radius-sm: 0;
+  --sr-radius-md: 0;
+  --sr-radius-lg: 0;
+  --sr-radius-full: 999px;
+  --sr-border-width-default: 1px;
+  --sr-border-width-strong: 2px;
+  --sr-shadow-sm: none;
+  --sr-shadow-md: none;
+  --sr-motion-duration-fast: 120ms;
+  --sr-motion-duration-base: 200ms;
+  --sr-motion-duration-slow: 400ms;
+  --sr-motion-easing-standard: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --sr-motion-easing-emphasized: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --sr-breakpoint-sm: 600px;
+  --sr-breakpoint-md: 900px;
+  --sr-breakpoint-lg: 1180px;
+  --sr-breakpoint-xl: 1440px;
+  --sr-component-heading-weight: var(--sr-font-weight-light);
+  --sr-component-button-radius: var(--sr-radius-none);
+  --sr-component-button-weight: var(--sr-font-weight-semibold);
+  --sr-component-button-transform: uppercase;
+  --sr-component-button-tracking: 0.14em;
+  --sr-component-button-padding-x: var(--sr-space-6);
+  --sr-component-button-height-sm: 2.25rem;
+  --sr-component-button-height-md: 2.75rem;
+  --sr-component-button-height-lg: 3.25rem;
+  --sr-component-input-radius: var(--sr-radius-none);
+  --sr-component-input-height: 2.75rem;
+  --sr-component-card-radius: var(--sr-radius-none);
+  --sr-component-card-padding: var(--sr-space-8);
+  --sr-component-card-shadow: none;
+  --sr-component-badge-radius: var(--sr-radius-none);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sr-color-bg: var(--sr-color-encre);
+    --sr-color-surface: var(--sr-color-nuit-2);
+    --sr-color-surface-2: var(--sr-color-cendre);
+    --sr-color-text: var(--sr-color-craie);
+    --sr-color-text-muted: var(--sr-color-sable);
+    --sr-color-border: #4A4037;
+    --sr-color-accent: var(--sr-color-terre);
+    --sr-color-accent-hover: #E8664A;
+    --sr-color-accent-contrast: var(--sr-color-encre);
+    --sr-color-focus: var(--sr-color-terre);
+    --sr-color-success: var(--sr-color-mousse-claire);
+    --sr-color-warning: var(--sr-color-miel-clair);
+    --sr-color-danger: var(--sr-color-brique-claire);
+    --sr-color-danger-contrast: var(--sr-color-encre);
+    color-scheme: dark;
+  }
+}
+
+[data-theme="dark"] {
+  --sr-color-bg: var(--sr-color-encre);
+  --sr-color-surface: var(--sr-color-nuit-2);
+  --sr-color-surface-2: var(--sr-color-cendre);
+  --sr-color-text: var(--sr-color-craie);
+  --sr-color-text-muted: var(--sr-color-sable);
+  --sr-color-border: #4A4037;
+  --sr-color-accent: var(--sr-color-terre);
+  --sr-color-accent-hover: #E8664A;
+  --sr-color-accent-contrast: var(--sr-color-encre);
+  --sr-color-focus: var(--sr-color-terre);
+  --sr-color-success: var(--sr-color-mousse-claire);
+  --sr-color-warning: var(--sr-color-miel-clair);
+  --sr-color-danger: var(--sr-color-brique-claire);
+  --sr-color-danger-contrast: var(--sr-color-encre);
+  color-scheme: dark;
+}
+
+/* Généré par brand-build depuis tokens.json (Studio Rayas v1.1.0). Ne pas modifier : modifier tokens.json puis relancer le build. */
+
+/* Base */
+.sr-root { background: var(--sr-color-bg); color: var(--sr-color-text); font-family: var(--sr-font-body); line-height: var(--sr-leading-normal, 1.5); -webkit-font-smoothing: antialiased; }
+.sr-root :focus-visible { outline: 2px solid var(--sr-color-focus); outline-offset: 2px; }
+.sr-display { font-family: var(--sr-font-display); font-size: var(--sr-text-5xl, 3rem); line-height: var(--sr-leading-tight, 1.1); letter-spacing: var(--sr-tracking-tight, -0.01em); font-weight: var(--sr-component-heading-weight, var(--sr-font-weight-regular, 400)); }
+.sr-h1 { font-family: var(--sr-font-display); font-size: var(--sr-text-4xl, 2.25rem); line-height: var(--sr-leading-tight, 1.15); font-weight: var(--sr-component-heading-weight, 600); }
+.sr-h2 { font-family: var(--sr-font-display); font-size: var(--sr-text-3xl, 1.875rem); line-height: var(--sr-leading-tight, 1.2); font-weight: var(--sr-component-heading-weight, 600); }
+.sr-h3 { font-family: var(--sr-font-display); font-size: var(--sr-text-xl, 1.25rem); line-height: var(--sr-leading-snug, 1.3); font-weight: var(--sr-component-heading-weight, 600); }
+.sr-body { font-size: var(--sr-text-base, 1rem); }
+.sr-small { font-size: var(--sr-text-sm, 0.875rem); color: var(--sr-color-text-muted); }
+.sr-eyebrow { font-size: var(--sr-text-xs, 0.75rem); letter-spacing: var(--sr-tracking-wide, 0.08em); text-transform: uppercase; color: var(--sr-color-text-muted); }
+.sr-link { color: var(--sr-color-accent); text-decoration: underline; text-underline-offset: 0.2em; transition: opacity var(--sr-motion-duration-fast, 120ms); }
+.sr-link:hover { opacity: 0.8; }
+
+/* Bouton */
+.sr-btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: var(--sr-space-2, 0.5rem);
+  font-family: var(--sr-component-button-font, var(--sr-font-body)); font-weight: var(--sr-component-button-weight, 600);
+  text-transform: var(--sr-component-button-transform, none); letter-spacing: var(--sr-component-button-tracking, 0);
+  font-size: var(--sr-text-sm, 0.875rem); line-height: 1; height: var(--sr-component-button-height-md, 2.5rem);
+  padding: 0 var(--sr-component-button-padding-x, var(--sr-space-4, 1rem)); border-radius: var(--sr-component-button-radius, var(--sr-radius-md, 6px));
+  border: var(--sr-border-width-default, 1px) solid transparent; cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: background-color var(--sr-motion-duration-fast, 120ms) var(--sr-motion-easing-standard, ease), color var(--sr-motion-duration-fast, 120ms), border-color var(--sr-motion-duration-fast, 120ms), transform var(--sr-motion-duration-fast, 120ms); }
+.sr-btn:active:not(:disabled) { transform: translateY(1px); }
+.sr-btn:focus-visible { outline: 2px solid var(--sr-color-focus); outline-offset: 2px; }
+.sr-btn--primary { background: var(--sr-color-accent); color: var(--sr-color-accent-contrast); }
+.sr-btn--primary:hover:not(:disabled) { background: var(--sr-color-accent-hover, color-mix(in srgb, var(--sr-color-accent) 88%, var(--sr-color-text))); }
+.sr-btn--secondary { background: var(--sr-color-surface); color: var(--sr-color-text); border-color: var(--sr-color-border); }
+.sr-btn--secondary:hover:not(:disabled) { border-color: var(--sr-color-text); }
+.sr-btn--ghost { background: transparent; color: var(--sr-color-text); }
+.sr-btn--ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--sr-color-text) 7%, transparent); }
+.sr-btn--danger { background: var(--sr-color-danger); color: var(--sr-color-danger-contrast, #fff); }
+.sr-btn--sm { height: var(--sr-component-button-height-sm, 2rem); padding: 0 var(--sr-space-3, 0.75rem); font-size: var(--sr-text-xs, 0.75rem); }
+.sr-btn--lg { height: var(--sr-component-button-height-lg, 3rem); padding: 0 var(--sr-space-6, 1.5rem); font-size: var(--sr-text-base, 1rem); }
+.sr-btn:disabled, .sr-btn[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+.sr-btn[aria-busy="true"] { cursor: progress; }
+.sr-btn[aria-busy="true"]::before { content: ""; width: 1em; height: 1em; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: sr-spin 0.7s linear infinite; }
+@keyframes sr-spin { to { transform: rotate(360deg); } }
+
+/* Champ */
+.sr-field { display: grid; gap: var(--sr-space-1, 0.25rem); }
+.sr-label { font-size: var(--sr-text-sm, 0.875rem); font-weight: var(--sr-font-weight-medium, 500); color: var(--sr-color-text); }
+.sr-hint { font-size: var(--sr-text-xs, 0.75rem); color: var(--sr-color-text-muted); }
+.sr-input { box-sizing: border-box; width: 100%; font: inherit; font-size: var(--sr-text-sm, 0.875rem); color: var(--sr-color-text); background: var(--sr-color-surface);
+  height: var(--sr-component-input-height, 2.5rem); padding: 0 var(--sr-space-3, 0.75rem); border: var(--sr-border-width-default, 1px) solid var(--sr-color-border);
+  border-radius: var(--sr-component-input-radius, var(--sr-radius-md, 6px)); transition: border-color var(--sr-motion-duration-fast, 120ms), box-shadow var(--sr-motion-duration-fast, 120ms); }
+textarea.sr-input { height: auto; min-height: 6rem; padding: var(--sr-space-2, 0.5rem) var(--sr-space-3, 0.75rem); }
+.sr-input::placeholder { color: var(--sr-color-text-muted); opacity: 0.8; }
+.sr-input:hover:not(:disabled) { border-color: color-mix(in srgb, var(--sr-color-border) 50%, var(--sr-color-text)); }
+.sr-input:focus { outline: none; border-color: var(--sr-color-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--sr-color-focus) 25%, transparent); }
+.sr-input[aria-invalid="true"] { border-color: var(--sr-color-danger); }
+.sr-input[aria-invalid="true"] ~ .sr-hint { color: var(--sr-color-danger); }
+.sr-input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Carte */
+.sr-card { box-sizing: border-box; background: var(--sr-color-surface); color: var(--sr-color-text); border: var(--sr-component-card-border, var(--sr-border-width-default, 1px) solid var(--sr-color-border));
+  border-radius: var(--sr-component-card-radius, var(--sr-radius-lg, 10px)); padding: var(--sr-component-card-padding, var(--sr-space-6, 1.5rem)); box-shadow: var(--sr-component-card-shadow, none); }
+.sr-card--interactive { transition: transform var(--sr-motion-duration-base, 200ms) var(--sr-motion-easing-standard, ease), box-shadow var(--sr-motion-duration-base, 200ms); cursor: pointer; }
+.sr-card--interactive:hover { transform: translateY(-2px); box-shadow: var(--sr-shadow-md, 0 6px 20px rgb(0 0 0 / .08)); }
+
+/* Badge */
+.sr-badge { display: inline-flex; align-items: center; gap: var(--sr-space-1, 0.25rem); font-size: var(--sr-text-xs, 0.75rem); font-weight: var(--sr-font-weight-medium, 500);
+  padding: 0.2em 0.6em; border-radius: var(--sr-component-badge-radius, var(--sr-radius-full, 999px)); background: color-mix(in srgb, var(--sr-color-text) 8%, transparent); color: var(--sr-color-text); }
+.sr-badge--accent { background: color-mix(in srgb, var(--sr-color-accent) 16%, transparent); color: var(--sr-color-text); }
+.sr-badge--success { background: color-mix(in srgb, var(--sr-color-success) 18%, transparent); }
+.sr-badge--warning { background: color-mix(in srgb, var(--sr-color-warning) 22%, transparent); }
+.sr-badge--danger { background: color-mix(in srgb, var(--sr-color-danger) 18%, transparent); }
+
+@media (prefers-reduced-motion: reduce) { .sr-root *, .sr-btn, .sr-card--interactive { transition: none !important; animation: none !important; } }
+
+
+/* Mise en page de la planche */
+body { margin: 0; }
+.pv { max-width: 1120px; margin: 0 auto; padding: var(--sr-space-12, 3rem) 16px var(--sr-space-24, 6rem); }
+.pv header { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; border-bottom: 1px solid var(--sr-color-border); padding-bottom: var(--sr-space-8, 2rem); margin-bottom: var(--sr-space-12, 3rem); }
+.pv section { margin-bottom: var(--sr-space-16, 4rem); }
+.pv section > h2 { margin: 0 0 var(--sr-space-6, 1.5rem); }
+.pv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sr-space-4, 1rem); }
+.pv-sw { border: 1px solid var(--sr-color-border); background: var(--sr-color-surface); }
+.pv-chip { height: 88px; border-bottom: 1px solid var(--sr-color-border); }
+.pv-meta { padding: var(--sr-space-3, .75rem); display: grid; gap: 2px; font-size: var(--sr-text-xs, .75rem); }
+.pv-meta strong { font-size: var(--sr-text-sm, .875rem); }
+.pv-meta em { color: var(--sr-color-text-muted); }
+.pv code { font-family: var(--sr-font-mono, ui-monospace, monospace); font-size: 0.85em; color: var(--sr-color-text-muted); }
+.pv-row { display: grid; grid-template-columns: 200px 110px 1fr; align-items: center; gap: var(--sr-space-4, 1rem); padding: var(--sr-space-3, .75rem) 0; border-bottom: 1px solid var(--sr-color-border); overflow: hidden; }
+.pv-row > div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pv-val { font-size: var(--sr-text-xs, .75rem); color: var(--sr-color-text-muted); }
+.pv-demo { display: flex; flex-wrap: wrap; gap: var(--sr-space-3, .75rem); align-items: center; margin-bottom: var(--sr-space-6, 1.5rem); }
+.pv-family { padding: var(--sr-space-6, 1.5rem) 0; border-bottom: 1px solid var(--sr-color-border); }
+.pv-family .big { font-size: var(--sr-text-4xl, 2.25rem); line-height: 1.1; margin: var(--sr-space-2, .5rem) 0; }
+.pv table { width: 100%; border-collapse: collapse; font-size: var(--sr-text-sm, .875rem); }
+.pv td, .pv th { text-align: left; padding: var(--sr-space-2, .5rem); border-bottom: 1px solid var(--sr-color-border); }
+.pv-pair { display: inline-block; padding: 2px 10px; font-weight: 600; border: 1px solid var(--sr-color-border); }
+.pv-toggle { font: inherit; }
+.pv-grid > *, .pv-row > * { min-width: 0; }
+@media (max-width: 640px) { .pv-row { grid-template-columns: 1fr; gap: 4px; } .pv-row > div { white-space: normal; } .pv-grid { grid-template-columns: 1fr 1fr; } .pv td, .pv th { padding: 4px; } }
+</style>
+</head>
+<body class="sr-root">
+<main class="pv">
+<header>
+  <div>
+    <div class="sr-eyebrow">Système de marque · v1.1.0</div>
+    <h1 class="sr-display" style="margin:.25em 0 0">Studio Rayas</h1>
+    <p class="sr-body" style="max-width:52ch;color:var(--sr-color-text-muted)">On rend l'artistique technique.</p>
+  </div>
+  <button class="sr-btn sr-btn--secondary sr-btn--sm pv-toggle" onclick="var r=document.documentElement;var d=r.dataset.theme==='dark'||(!r.dataset.theme&&matchMedia('(prefers-color-scheme: dark)').matches);r.dataset.theme=d?'light':'dark'">Clair / sombre</button>
+</header>
+<section><p class="sr-body" style="max-width:68ch;font-size:var(--sr-text-lg, 1.125rem)">Un système de conseil et d'atelier : craie et encre pour la rigueur, une seule terre pour le geste. Tout est à plat, à angles droits, sans dégradé, pour qu'une règle écrite suffise à reproduire la marque.</p></section>
+
+<section><h2 class="sr-h2">Couleurs</h2>
+  <h3 class="sr-h3">Rôles</h3><div class="pv-grid"><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-bg)"></div><div class="pv-meta"><strong>bg</strong><code>--sr-color-bg</code><span>#F7F2EA · sombre #17120F</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-surface)"></div><div class="pv-meta"><strong>surface</strong><code>--sr-color-surface</code><span>#FFFFFF · sombre #221C18</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-surface-2)"></div><div class="pv-meta"><strong>surface-2</strong><code>--sr-color-surface-2</code><span>#EAE0D2 · sombre #3A322C</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-text)"></div><div class="pv-meta"><strong>text</strong><code>--sr-color-text</code><span>#17120F · sombre #F7F2EA</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-text-muted)"></div><div class="pv-meta"><strong>text-muted</strong><code>--sr-color-text-muted</code><span>#5E544B · sombre #B8AD9D</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-border)"></div><div class="pv-meta"><strong>border</strong><code>--sr-color-border</code><span>#C9BEAE · sombre #4A4037</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-accent)"></div><div class="pv-meta"><strong>accent</strong><code>--sr-color-accent</code><span>#B33E20 · sombre #D9502E</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-accent-hover)"></div><div class="pv-meta"><strong>accent-hover</strong><code>--sr-color-accent-hover</code><span>#8E2F17 · sombre #E8664A</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-accent-contrast)"></div><div class="pv-meta"><strong>accent-contrast</strong><code>--sr-color-accent-contrast</code><span>#F7F2EA · sombre #17120F</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-focus)"></div><div class="pv-meta"><strong>focus</strong><code>--sr-color-focus</code><span>#B33E20 · sombre #D9502E</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-success)"></div><div class="pv-meta"><strong>success</strong><code>--sr-color-success</code><span>#3F6B3C · sombre #8DBF86</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-warning)"></div><div class="pv-meta"><strong>warning</strong><code>--sr-color-warning</code><span>#8A5A12 · sombre #E0B25A</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-danger)"></div><div class="pv-meta"><strong>danger</strong><code>--sr-color-danger</code><span>#9B1C2E · sombre #E87A86</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-danger-contrast)"></div><div class="pv-meta"><strong>danger-contrast</strong><code>--sr-color-danger-contrast</code><span>#F7F2EA · sombre #17120F</span></div></div></div>
+  <h3 class="sr-h3" style="margin-top:2rem">Palette</h3><div class="pv-grid"><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-craie)"></div><div class="pv-meta"><strong>craie</strong><code>--sr-color-craie</code><span>#F7F2EA</span><em>Fond principal, jamais blanc pur</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-papier)"></div><div class="pv-meta"><strong>papier</strong><code>--sr-color-papier</code><span>#EAE0D2</span><em>Surfaces secondaires, bandes</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-encre)"></div><div class="pv-meta"><strong>encre</strong><code>--sr-color-encre</code><span>#17120F</span><em>Texte, jamais noir pur</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-blanc)"></div><div class="pv-meta"><strong>blanc</strong><code>--sr-color-blanc</code><span>#FFFFFF</span><em>Cartes et panneaux posés sur la craie</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-terre)"></div><div class="pv-meta"><strong>terre</strong><code>--sr-color-terre</code><span>#D9502E</span><em>Le seul vif. Aplats, filets, pastilles. Pas en texte courant sur craie (3,7)</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-terre-profonde)"></div><div class="pv-meta"><strong>terre-profonde</strong><code>--sr-color-terre-profonde</code><span>#B33E20</span><em>La terre quand elle porte du texte ou un bouton sur craie (5,2)</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-terre-braise)"></div><div class="pv-meta"><strong>terre-braise</strong><code>--sr-color-terre-braise</code><span>#8E2F17</span><em>Survol des éléments terre</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-safran)"></div><div class="pv-meta"><strong>safran</strong><code>--sr-color-safran</code><span>#F2C14E</span><em>Support de données et de statuts, jamais accent de marque</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-ambre)"></div><div class="pv-meta"><strong>ambre</strong><code>--sr-color-ambre</code><span>#EE8B3E</span><em>Support de données</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-sauge)"></div><div class="pv-meta"><strong>sauge</strong><code>--sr-color-sauge</code><span>#9DBFB3</span><em>Support de données</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-azur)"></div><div class="pv-meta"><strong>azur</strong><code>--sr-color-azur</code><span>#7EA8C6</span><em>Support de données</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-mousse)"></div><div class="pv-meta"><strong>mousse</strong><code>--sr-color-mousse</code><span>#3F6B3C</span><em>Succès</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-miel)"></div><div class="pv-meta"><strong>miel</strong><code>--sr-color-miel</code><span>#8A5A12</span><em>Alerte</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-brique)"></div><div class="pv-meta"><strong>brique</strong><code>--sr-color-brique</code><span>#9B1C2E</span><em>Erreur</em></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-mousse-claire)"></div><div class="pv-meta"><strong>mousse-claire</strong><code>--sr-color-mousse-claire</code><span>#8DBF86</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-miel-clair)"></div><div class="pv-meta"><strong>miel-clair</strong><code>--sr-color-miel-clair</code><span>#E0B25A</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-brique-claire)"></div><div class="pv-meta"><strong>brique-claire</strong><code>--sr-color-brique-claire</code><span>#E87A86</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-nuit-2)"></div><div class="pv-meta"><strong>nuit-2</strong><code>--sr-color-nuit-2</code><span>#221C18</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-cendre)"></div><div class="pv-meta"><strong>cendre</strong><code>--sr-color-cendre</code><span>#3A322C</span></div></div><div class="pv-sw"><div class="pv-chip" style="background:var(--sr-color-sable)"></div><div class="pv-meta"><strong>sable</strong><code>--sr-color-sable</code><span>#B8AD9D</span></div></div></div>
+</section>
+
+<section><h2 class="sr-h2">Contrastes</h2>
+  <div style="overflow-x:auto"><table><thead><tr><th>Mode</th><th>Paire</th><th>Aperçu</th><th>Ratio</th><th>Minimum</th><th></th></tr></thead><tbody><tr><td>light</td><td>Texte sur fond</td><td><span class="pv-pair" style="background:#F7F2EA;color:#17120F">Aa</span></td><td>16.68:1</td><td>4.5:1</td><td>✓</td></tr><tr><td>light</td><td>Texte sur surface</td><td><span class="pv-pair" style="background:#FFFFFF;color:#17120F">Aa</span></td><td>18.59:1</td><td>4.5:1</td><td>✓</td></tr><tr><td>light</td><td>Texte secondaire sur fond</td><td><span class="pv-pair" style="background:#F7F2EA;color:#5E544B">Aa</span></td><td>6.62:1</td><td>4.5:1</td><td>✓</td></tr><tr><td>light</td><td>Texte secondaire sur surface</td><td><span class="pv-pair" style="background:#FFFFFF;color:#5E544B">Aa</span></td><td>7.38:1</td><td>4.5:1</td><td>✓</td></tr><tr><td>light</td><td>Texte du bouton principal</td><td><span class="pv-pair" style="background:#B33E20;color:#F7F2EA">Aa</span></td><td>5.2:1</td><td>4.5:1</td><td>✓</td></tr><tr><td>light</td><td>Accent sur fond (éléments d'interface)</td><td><span class="pv-pair" style="background:#F7F2EA;color:#B33E20">Aa</span></td><td>5.2:1</td><td>3:1</td><td>✓</td></tr><tr><td>light</td><td>Anneau de focus</td><td><span class="pv-pair" style="background:#F7F2EA;color:#B33E20">Aa</span></td><td>5.2:1</td><td>3:1</td><td>✓</td></tr><tr><td>light</td><td>Erreur sur fond</td><td><span class="pv-pair" style="background:#F7F2EA;color:#9B1C2E">Aa</span></td><td>7.25:1</td><td>3:1</td><td>✓</td></tr><tr><td>dark</td><td>Texte sur fond</td><td><span class="pv-pair" style="background:#17120F;color:#F7F2EA">Aa</span></td><td>16.68:1</td><td>4.5:1</td><td>✓</td></tr><tr><td>dark</td><td>Texte sur surface</td><td><span class="pv-pair" style="background:#221C18;color:#F7F2EA">Aa</span></td><td>15.11:1</td><td>4.5:1</td><td>✓</td></tr><tr><td>dark</td><td>Texte secondaire sur fond</td><td><span class="pv-pair" style="background:#17120F;color:#B8AD9D">Aa</span></td><td>8.41:1</td><td>4.5:1</td><td>✓</td></tr><tr><td>dark</td><td>Texte secondaire sur surface</td><td><span class="pv-pair" style="background:#221C18;color:#B8AD9D">Aa</span></td><td>7.62:1</td><td>4.5:1</td><td>✓</td></tr><tr><td>dark</td><td>Texte du bouton principal</td><td><span class="pv-pair" style="background:#D9502E;color:#17120F">Aa</span></td><td>4.55:1</td><td>4.5:1</td><td>✓</td></tr><tr><td>dark</td><td>Accent sur fond (éléments d'interface)</td><td><span class="pv-pair" style="background:#17120F;color:#D9502E">Aa</span></td><td>4.55:1</td><td>3:1</td><td>✓</td></tr><tr><td>dark</td><td>Anneau de focus</td><td><span class="pv-pair" style="background:#17120F;color:#D9502E">Aa</span></td><td>4.55:1</td><td>3:1</td><td>✓</td></tr><tr><td>dark</td><td>Erreur sur fond</td><td><span class="pv-pair" style="background:#17120F;color:#E87A86">Aa</span></td><td>6.69:1</td><td>3:1</td><td>✓</td></tr></tbody></table></div>
+</section>
+
+<section><h2 class="sr-h2">Typographie</h2>
+  <div class="pv-family"><div class="sr-eyebrow">display · <code>--sr-font-display</code></div><div class="big" style="font-family:var(--sr-font-display)">Studio Rayas Aa Bb Gg 0123</div><code>'Cormorant Garamond', 'EB Garamond', Georgia, serif</code></div><div class="pv-family"><div class="sr-eyebrow">body · <code>--sr-font-body</code></div><div class="big" style="font-family:var(--sr-font-body)">Studio Rayas Aa Bb Gg 0123</div><code>'Archivo', 'Helvetica Neue', Arial, sans-serif</code></div><div class="pv-family"><div class="sr-eyebrow">mono · <code>--sr-font-mono</code></div><div class="big" style="font-family:var(--sr-font-mono)">Studio Rayas 0123456789</div><code>ui-monospace, 'SF Mono', Menlo, monospace</code></div>
+  <h3 class="sr-h3" style="margin-top:2rem">Échelle</h3>
+  <div class="pv-row"><code>--sr-text-xs</code><span class="pv-val">0.75rem</span><div style="font-size:var(--sr-text-xs);line-height:1.2">Une marque qui tient sans son auteur</div></div><div class="pv-row"><code>--sr-text-sm</code><span class="pv-val">0.875rem</span><div style="font-size:var(--sr-text-sm);line-height:1.2">Une marque qui tient sans son auteur</div></div><div class="pv-row"><code>--sr-text-base</code><span class="pv-val">1rem</span><div style="font-size:var(--sr-text-base);line-height:1.2">Une marque qui tient sans son auteur</div></div><div class="pv-row"><code>--sr-text-lg</code><span class="pv-val">1.1875rem</span><div style="font-size:var(--sr-text-lg);line-height:1.2">Une marque qui tient sans son auteur</div></div><div class="pv-row"><code>--sr-text-xl</code><span class="pv-val">1.625rem</span><div style="font-size:var(--sr-text-xl);line-height:1.2">Une marque qui tient sans son auteur</div></div><div class="pv-row"><code>--sr-text-2xl</code><span class="pv-val">2.125rem</span><div style="font-size:var(--sr-text-2xl);line-height:1.2">Une marque qui tient sans son auteur</div></div><div class="pv-row"><code>--sr-text-3xl</code><span class="pv-val">3rem</span><div style="font-size:var(--sr-text-3xl);line-height:1.2">Une marque qui tient sans son auteur</div></div><div class="pv-row"><code>--sr-text-4xl</code><span class="pv-val">4rem</span><div style="font-size:var(--sr-text-4xl);line-height:1.2">Une marque qui tient sans son auteur</div></div><div class="pv-row"><code>--sr-text-5xl</code><span class="pv-val">6rem</span><div style="font-size:var(--sr-text-5xl);line-height:1.2">Une marque qui tient sans son auteur</div></div>
+</section>
+
+<section><h2 class="sr-h2">Espacements</h2>
+  <div class="pv-row"><code>--sr-space-0</code><span class="pv-val">0</span><div style=""><div style="height:12px;width:var(--sr-space-0);background:var(--sr-color-accent)"></div></div></div><div class="pv-row"><code>--sr-space-1</code><span class="pv-val">0.25rem</span><div style=""><div style="height:12px;width:var(--sr-space-1);background:var(--sr-color-accent)"></div></div></div><div class="pv-row"><code>--sr-space-2</code><span class="pv-val">0.5rem</span><div style=""><div style="height:12px;width:var(--sr-space-2);background:var(--sr-color-accent)"></div></div></div><div class="pv-row"><code>--sr-space-3</code><span class="pv-val">0.75rem</span><div style=""><div style="height:12px;width:var(--sr-space-3);background:var(--sr-color-accent)"></div></div></div><div class="pv-row"><code>--sr-space-4</code><span class="pv-val">1rem</span><div style=""><div style="height:12px;width:var(--sr-space-4);background:var(--sr-color-accent)"></div></div></div><div class="pv-row"><code>--sr-space-6</code><span class="pv-val">1.5rem</span><div style=""><div style="height:12px;width:var(--sr-space-6);background:var(--sr-color-accent)"></div></div></div><div class="pv-row"><code>--sr-space-8</code><span class="pv-val">2rem</span><div style=""><div style="height:12px;width:var(--sr-space-8);background:var(--sr-color-accent)"></div></div></div><div class="pv-row"><code>--sr-space-12</code><span class="pv-val">3rem</span><div style=""><div style="height:12px;width:var(--sr-space-12);background:var(--sr-color-accent)"></div></div></div><div class="pv-row"><code>--sr-space-16</code><span class="pv-val">4rem</span><div style=""><div style="height:12px;width:var(--sr-space-16);background:var(--sr-color-accent)"></div></div></div><div class="pv-row"><code>--sr-space-24</code><span class="pv-val">6rem</span><div style=""><div style="height:12px;width:var(--sr-space-24);background:var(--sr-color-accent)"></div></div></div>
+</section>
+
+<section><h2 class="sr-h2">Rayons et ombres</h2>
+  <div class="pv-grid">
+  <div class="pv-sw" style="padding:1rem"><div style="height:72px;background:var(--sr-color-surface);border:1px solid var(--sr-color-border);border-radius:var(--sr-radius-none)"></div><div class="pv-meta" style="padding:.5rem 0 0"><code>--sr-radius-none</code><span>0</span></div></div><div class="pv-sw" style="padding:1rem"><div style="height:72px;background:var(--sr-color-surface);border:1px solid var(--sr-color-border);border-radius:var(--sr-radius-sm)"></div><div class="pv-meta" style="padding:.5rem 0 0"><code>--sr-radius-sm</code><span>0</span></div></div><div class="pv-sw" style="padding:1rem"><div style="height:72px;background:var(--sr-color-surface);border:1px solid var(--sr-color-border);border-radius:var(--sr-radius-md)"></div><div class="pv-meta" style="padding:.5rem 0 0"><code>--sr-radius-md</code><span>0</span></div></div><div class="pv-sw" style="padding:1rem"><div style="height:72px;background:var(--sr-color-surface);border:1px solid var(--sr-color-border);border-radius:var(--sr-radius-lg)"></div><div class="pv-meta" style="padding:.5rem 0 0"><code>--sr-radius-lg</code><span>0</span></div></div><div class="pv-sw" style="padding:1rem"><div style="height:72px;background:var(--sr-color-surface);border:1px solid var(--sr-color-border);border-radius:var(--sr-radius-full)"></div><div class="pv-meta" style="padding:.5rem 0 0"><code>--sr-radius-full</code><span>999px</span></div></div>
+  <div class="pv-sw" style="padding:1rem"><div style="height:72px;background:var(--sr-color-surface);box-shadow:var(--sr-shadow-sm)"></div><div class="pv-meta" style="padding:.5rem 0 0"><code>--sr-shadow-sm</code></div></div><div class="pv-sw" style="padding:1rem"><div style="height:72px;background:var(--sr-color-surface);box-shadow:var(--sr-shadow-md)"></div><div class="pv-meta" style="padding:.5rem 0 0"><code>--sr-shadow-md</code></div></div>
+  </div>
+</section>
+
+<section><h2 class="sr-h2">Composants</h2>
+  <h3 class="sr-h3">Boutons</h3>
+  <div class="pv-demo">
+    <button class="sr-btn sr-btn--primary">Principal</button>
+    <button class="sr-btn sr-btn--secondary">Secondaire</button>
+    <button class="sr-btn sr-btn--ghost">Discret</button>
+    <button class="sr-btn sr-btn--danger">Supprimer</button>
+    <button class="sr-btn sr-btn--primary" disabled>Désactivé</button>
+    <button class="sr-btn sr-btn--primary" aria-busy="true">Chargement</button>
+  </div>
+  <div class="pv-demo">
+    <button class="sr-btn sr-btn--primary sr-btn--sm">Petit</button>
+    <button class="sr-btn sr-btn--primary">Moyen</button>
+    <button class="sr-btn sr-btn--primary sr-btn--lg">Grand</button>
+  </div>
+  <h3 class="sr-h3">Champs</h3>
+  <div class="pv-grid" style="margin-bottom:1.5rem">
+    <div class="sr-field"><label class="sr-label" for="pv-a">Nom</label><input id="pv-a" class="sr-input" placeholder="Votre nom"><span class="sr-hint">Texte d'aide</span></div>
+    <div class="sr-field"><label class="sr-label" for="pv-b">Email</label><input id="pv-b" class="sr-input" value="adresse@invalide" aria-invalid="true"><span class="sr-hint">Adresse invalide</span></div>
+    <div class="sr-field"><label class="sr-label" for="pv-c">Désactivé</label><input id="pv-c" class="sr-input" disabled value="Non modifiable"></div>
+  </div>
+  <h3 class="sr-h3">Cartes et badges</h3>
+  <div class="pv-grid">
+    <div class="sr-card"><div class="sr-eyebrow">Carte</div><h4 class="sr-h3" style="margin:.5rem 0">Titre de carte</h4><p class="sr-small">Un court paragraphe pour juger le rythme du texte dans une surface.</p><div class="pv-demo" style="margin:1rem 0 0"><span class="sr-badge">Neutre</span><span class="sr-badge sr-badge--accent">Accent</span><span class="sr-badge sr-badge--success">Validé</span><span class="sr-badge sr-badge--warning">Attention</span><span class="sr-badge sr-badge--danger">Erreur</span></div></div>
+    <div class="sr-card sr-card--interactive"><div class="sr-eyebrow">Carte interactive</div><h4 class="sr-h3" style="margin:.5rem 0">Survolez-moi</h4><p class="sr-small">Élévation au survol, désactivée si l'utilisateur réduit les animations.</p><a class="sr-link" href="#">Lien de marque</a></div>
+  </div>
+</section>
+<footer class="sr-small">Planche générée depuis tokens.json par brand-build. Source de vérité : brand/tokens.json et brand/BRAND.md.</footer>
+</main>
+</body>
+</html>
