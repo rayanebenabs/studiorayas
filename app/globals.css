@@ -508,24 +508,10 @@ html.is-scroll-locked {
   line-height: calc(var(--u) * 250);
   white-space: nowrap;
   will-change: transform;
-  animation: hero-rules 6s linear infinite;
 }
 
 .hero__ticker p:nth-child(even) {
   margin-left: calc(var(--u) * -1200);
-}
-
-/* Les règles défilent en continu à l'intérieur du totem. */
-@keyframes hero-rules {
-  to {
-    transform: translateY(calc(var(--u) * -500));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__ticker {
-    animation: none;
-  }
 }
 
 .hero__night {

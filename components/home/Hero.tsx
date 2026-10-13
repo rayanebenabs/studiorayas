@@ -15,6 +15,9 @@ const RULES =
 const TOTEM_MASK = `url("data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${TOTEM_VIEWBOX}"><g transform="${TOTEM_TRANSFORM}">${TOTEM_PATHS.map((d) => `<path d="${d}"/>`).join("")}</g></svg>`,
 )}")`;
+const RULE_LINES = 72; // lignes de règles : les 64 du totem, plus les 6 qu'elles parcourent pendant Brand OS
+// Six lignes (1 500 unités) sur la hauteur du bandeau de règles (110 + 72 x 250 = 18 110 unités), en %.
+const RULE_TRAVEL = (1500 / 18110) * 100;
 const SPAN = 0.8; // hauteur d'écran de défilement par service
 const STEP_DURATION = 0.9; // secondes pour aller d'un service au suivant (flèches, calage)
 const DRAG = 0.45; // part de la hauteur d'écran que le doigt parcourt pour un service entier
@@ -32,6 +35,7 @@ export function Hero() {
   const totem = useRef<HTMLDivElement>(null);
   const night = useRef<HTMLDivElement>(null);
   const rules = useRef<HTMLDivElement>(null);
+  const ticker = useRef<HTMLDivElement>(null);
   const fills = useRef<(HTMLDivElement | null)[]>([]);
   const cards = useRef<(HTMLDivElement | null)[]>([]);
   const segs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -60,6 +64,8 @@ export function Hero() {
     // 01 → 02 : l'encre remplit le totem de bas en haut.
     t.fromTo(encre, { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: "power3.inOut" }, 0.35);
     t.set(rules.current, { opacity: 1 }, 0.95);
+    // Les règles glissent dans le totem au rythme du défilement, tant qu'on les voit : immobiles quand la page l'est.
+    t.fromTo(ticker.current, { yPercent: 0 }, { yPercent: -RULE_TRAVEL, duration: 1.4 }, 0.95);
     // 02 → 03 : l'encre se retire vers le haut et découvre les règles.
     t.to(encre, { yPercent: -100, duration: 0.6, ease: "power3.inOut" }, 1.35);
     // 03 → 04 : la terre monte.
@@ -249,7 +255,7 @@ export function Hero() {
   const p = PHASES[phase];
   const dark = phase === LAST;
   const wheelCards = Array.from({ length: 10 }, (_, k) => PHASES[k % PHASES.length]);
-  const lines = Array.from({ length: 72 }, (_, i) => i);
+  const lines = Array.from({ length: RULE_LINES }, (_, i) => i);
 
   return (
     <section ref={root} className="hero" data-dark={dark} id="top" aria-label="Studio Rayas, studio de marque">
@@ -279,9 +285,9 @@ export function Hero() {
             passe par des transformations, gérées par la carte graphique, sans recalcul de mise en page. */}
         <div className="hero__matter" style={{ ["--totem-mask" as string]: TOTEM_MASK }} aria-hidden="true">
           <div ref={rules} className="hero__rules" style={{ opacity: 0 }}>
-            <div className="hero__ticker">
+            <div ref={ticker} className="hero__ticker">
               {lines.map((i) => (
-                <p key={i}>{RULES.repeat(3)}</p>
+                <p key={i}>{RULES.repeat(2)}</p>
               ))}
             </div>
           </div>
