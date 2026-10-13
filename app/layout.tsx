@@ -5,6 +5,7 @@ import "@fontsource/cormorant-garamond/400.css";
 import "@fontsource/archivo/400.css";
 import "@fontsource/archivo/500.css";
 import "@fontsource/archivo/600.css";
+import "lenis/dist/lenis.css";
 import "../brand/build/tokens.css";
 import "../brand/build/brand.css";
 import "./globals.css";

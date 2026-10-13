@@ -19,6 +19,10 @@ export function Gallery() {
   const [seen, setSeen] = useState<number[]>([]);
   const [touch, setTouch] = useState(false);
   const [knob, setKnob] = useState<{ ox: number; oy: number; x: number; y: number } | null>(null);
+  // L'aide aux pouces : chaque joystick fantôme s'efface une fois que le geste a été fait.
+  const [usedStick, setUsedStick] = useState(false);
+  const [usedLook, setUsedLook] = useState(false);
+  const [looking, setLooking] = useState(false);
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
 
@@ -138,6 +142,7 @@ export function Gallery() {
       setKnob({ ox: e.clientX, oy: e.clientY, x: 0, y: 0 });
     } else if (!lookId.current) {
       lookId.current = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: 0 };
+      setLooking(true);
     }
   };
 
@@ -161,6 +166,7 @@ export function Gallery() {
         y = (y / len) * STICK;
       }
       stickStart.current.moved = Math.max(stickStart.current.moved, Math.hypot(x, y));
+      if (stickStart.current.moved > 16) setUsedStick(true);
       setKnob({ ...knob, x, y });
       handle.current?.setStick(x / STICK, -y / STICK);
     } else if (lookId.current && e.pointerId === lookId.current.id) {
@@ -169,6 +175,7 @@ export function Gallery() {
       l.moved += Math.abs(e.clientX - l.x) + Math.abs(e.clientY - l.y);
       l.x = e.clientX;
       l.y = e.clientY;
+      if (l.moved > 40) setUsedLook(true);
     }
   };
 
@@ -195,6 +202,7 @@ export function Gallery() {
     } else if (lookId.current && e.pointerId === lookId.current.id) {
       const l = lookId.current;
       lookId.current = null;
+      setLooking(false);
       if (l.moved < 10 && performance.now() - l.t < 300 && phase === "walk") {
         const i = handle.current?.pick(e.clientX, e.clientY) ?? null;
         if (i !== null) openFocus(i);
@@ -283,6 +291,22 @@ export function Gallery() {
           <p className="gallery__hint">
             {ARTWORKS[hover].title} · cliquez pour vous approcher
           </p>
+        )}
+        {phase === "walk" && touch && (
+          <div className="gallery__thumbs" aria-hidden="true">
+            <div className="gallery__ghost gallery__ghost--walk" data-used={usedStick} data-active={knob !== null}>
+              <span className="gallery__ring">
+                <i />
+              </span>
+              <p>Marcher</p>
+            </div>
+            <div className="gallery__ghost gallery__ghost--look" data-used={usedLook} data-active={looking}>
+              <span className="gallery__ring">
+                <i />
+              </span>
+              <p>Regarder</p>
+            </div>
+          </div>
         )}
         {phase === "walk" && touch && knob && (
           <span className="gallery__stick" style={{ left: knob.ox, top: knob.oy }} aria-hidden="true">

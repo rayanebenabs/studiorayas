@@ -11,6 +11,7 @@ import "@fontsource/caveat/400.css";
 import { CLIENTS, getClient } from "@/content/clients";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { Collage } from "@/components/case/Collage";
 import { Fiche } from "@/components/case/Fiche";
 import { Branding } from "@/components/case/Branding";
@@ -56,6 +57,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         </div>
       </section>
       <SiteFooter />
+      <SmoothScroll />
     </main>
   );
 }

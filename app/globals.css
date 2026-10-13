@@ -258,13 +258,137 @@ p {
   color: var(--sr-color-terre);
 }
 
-@media (max-width: 900px) {
-  .site-header__links {
-    display: none;
+/* ---------- Menu mobile ---------- */
+
+.menu-button {
+  display: none;
+  align-items: center;
+  gap: var(--sr-space-3);
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--sr-text-sm);
+  font-weight: var(--sr-font-weight-medium);
+  cursor: pointer;
+}
+
+.menu-button__lines {
+  position: relative;
+  width: 24px;
+  height: 9px;
+}
+
+.menu-button__lines i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: currentColor;
+  transition: transform var(--sr-motion-duration-fast) var(--sr-motion-easing-standard);
+}
+
+.menu-button__lines i:first-child {
+  top: 0;
+}
+
+.menu-button__lines i:last-child {
+  bottom: 0;
+}
+
+.menu-button__lines[data-close="true"] i:first-child {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.menu-button__lines[data-close="true"] i:last-child {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+.menu-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sr-space-6) var(--sr-space-4) var(--sr-space-8);
+  background: var(--sr-color-bg);
+  color: var(--sr-color-text);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--sr-motion-duration-base) var(--sr-motion-easing-standard),
+    visibility 0s linear var(--sr-motion-duration-base);
+}
+
+.menu-panel[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--sr-motion-duration-base) var(--sr-motion-easing-standard);
+}
+
+.menu-panel__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--sr-space-4);
+  border-bottom: 1px solid var(--sr-color-border);
+}
+
+.menu-panel__links {
+  list-style: none;
+  margin: var(--sr-space-8) 0 0;
+  padding: 0;
+}
+
+.menu-panel__links li {
+  border-bottom: 1px solid var(--sr-color-border);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--sr-motion-duration-slow) var(--sr-motion-easing-standard),
+    transform var(--sr-motion-duration-slow) var(--sr-motion-easing-standard);
+}
+
+.menu-panel[data-open="true"] .menu-panel__links li {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i) * 40ms);
+}
+
+.menu-panel__links a {
+  display: block;
+  padding: var(--sr-space-4) 0;
+  font-family: var(--sr-font-display);
+  font-weight: var(--sr-font-weight-light);
+  font-size: clamp(2.2rem, 10vw, 3rem);
+  line-height: 1.1;
+  text-decoration: none;
+  color: inherit;
+}
+
+.menu-panel__cta {
+  margin-top: auto;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-panel,
+  .menu-panel__links li {
+    transition: none;
   }
 }
 
-/* Verrou posé pendant un arrêt de défilement (voir scrollLock dans lib/gsap.ts). */
+@media (max-width: 900px) {
+  .site-header__links,
+  .site-header__cta {
+    display: none;
+  }
+  .menu-button {
+    display: inline-flex;
+  }
+}
+
+/* L'élan du doigt coupé net sur un moment de la page (voir cutMomentum dans lib/scroll.ts). */
 html.is-scroll-locked {
   overflow: hidden;
 }
@@ -589,10 +713,6 @@ html.is-scroll-locked {
   .hero__totem {
     --th: 30vh;
     top: 36vh;
-  }
-  .site-header__cta {
-    max-width: 11em;
-    text-align: right;
   }
   .hero__phase {
     font-size: clamp(2.2rem, 10vw, 3rem);
@@ -1639,6 +1759,93 @@ html.is-scroll-locked {
   width: 40px;
   height: 40px;
   background: var(--sr-color-text);
+}
+
+/* L'aide aux pouces : deux joysticks fantômes, à gauche pour marcher, à droite pour regarder. */
+.gallery__thumbs {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 var(--sr-space-6) max(var(--sr-space-8), env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.gallery__ghost {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sr-space-2);
+  transition: opacity var(--sr-motion-duration-slow) var(--sr-motion-easing-standard);
+}
+
+.gallery__ghost p {
+  white-space: nowrap;
+  font-size: var(--sr-text-xs);
+  letter-spacing: var(--sr-tracking-wide);
+  text-transform: uppercase;
+  background: var(--sr-color-surface);
+  border: 1px solid var(--sr-color-border);
+  padding: var(--sr-space-1) var(--sr-space-2);
+}
+
+.gallery__ghost[data-used="true"] {
+  opacity: 0.35;
+}
+
+.gallery__ghost[data-used="true"] p {
+  display: none;
+}
+
+.gallery__ghost[data-active="true"] {
+  opacity: 0;
+}
+
+.gallery__ring {
+  width: 96px;
+  height: 96px;
+  border: 1px solid var(--sr-color-text);
+  background: color-mix(in srgb, var(--sr-color-surface) 55%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery__ring i {
+  width: 32px;
+  height: 32px;
+  background: var(--sr-color-text);
+}
+
+/* Le geste montré : le pouce gauche pousse vers l'avant, le droit glisse de côté. Trois fois, puis il s'arrête. */
+.gallery__ghost--walk:not([data-used="true"]) .gallery__ring i {
+  animation: gallery-walk 1.6s var(--sr-motion-easing-standard) 0.6s 3;
+}
+
+.gallery__ghost--look:not([data-used="true"]) .gallery__ring i {
+  animation: gallery-look 1.6s var(--sr-motion-easing-standard) 1.4s 3;
+}
+
+@keyframes gallery-walk {
+  40%,
+  60% {
+    transform: translateY(-22px);
+  }
+}
+
+@keyframes gallery-look {
+  30% {
+    transform: translateX(-22px);
+  }
+  70% {
+    transform: translateX(22px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery__ring i {
+    animation: none !important;
+  }
 }
 
 .gallery__panel {

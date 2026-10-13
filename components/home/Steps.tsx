@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
+import { addSettler, pickRest, scrollToY } from "@/lib/scroll";
 import { STEPS } from "@/content/site";
 import { tokens } from "@/brand/build/tokens.js";
 
@@ -48,6 +49,9 @@ function Bad({ children }: { children: string }) {
   );
 }
 
+/** La position de repos d'une étape : son animation vient de se terminer. */
+const restY = (st: ScrollTrigger, i: number) => st.start + ((st.end - st.start) * (i + 0.97)) / STEPS.length;
+
 /**
  * Le Brand OS en quatre étapes, dans une seule scène dont les éléments se transforment :
  * les documents deviennent le dossier, le dossier devient l'arborescence, puis le nœud qui alimente
@@ -62,6 +66,7 @@ export function Steps() {
   useLayoutEffect(() => {
     if (!root.current) return;
     const reduced = prefersReducedMotion();
+    let removeSettler = () => undefined as unknown;
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(root.current);
       const center = { xPercent: -50, yPercent: -50 };
@@ -132,23 +137,41 @@ export function Steps() {
       }
 
       // Ambiance : les documents flottent, les impulsions parcourent les connecteurs, le curseur clignote.
-      q(".os-doc__inner").forEach((el, i) =>
-        gsap.to(el, { y: i % 2 ? 6 : -6, duration: 2.4 + i * 0.3, ease: "sine.inOut", yoyo: true, repeat: -1 }),
-      );
-      gsap.fromTo(q(".os-pulse"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.6, ease: "none", repeat: -1, stagger: 0.25 });
-      gsap.to(q(".os-code__caret"), { opacity: 0, duration: 0.5, ease: "steps(1)", repeat: -1, yoyo: true });
+      // Seulement quand le schéma est à l'écran : ailleurs, ces boucles feraient travailler toute la page.
+      const ambient = [
+        ...q(".os-doc__inner").map((el, i) =>
+          gsap.to(el, { y: i % 2 ? 6 : -6, duration: 2.4 + i * 0.3, ease: "sine.inOut", yoyo: true, repeat: -1, paused: true }),
+        ),
+        gsap.fromTo(q(".os-pulse"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.6, ease: "none", repeat: -1, stagger: 0.25, paused: true }),
+        gsap.to(q(".os-code__caret"), { opacity: 0, duration: 0.5, ease: "steps(1)", repeat: -1, yoyo: true, paused: true }),
+      ];
+      ScrollTrigger.create({
+        trigger: root.current,
+        start: "top bottom",
+        end: "bottom top",
+        onToggle: (self) => ambient.forEach((t) => (self.isActive ? t.play() : t.pause())),
+      });
 
       trigger.current = ScrollTrigger.create({
         trigger: root.current,
         start: "top top",
         end: "+=340%",
         pin: true,
-        scrub: 0.8,
+        scrub: 0.3,
         animation: t,
         onUpdate: (self) => setActive(Math.min(STEPS.length - 1, Math.floor(self.progress * STEPS.length))),
       });
+      // Page immobile : le schéma se pose sur une étape terminée, jamais au milieu d'un geste.
+      const st = trigger.current;
+      // Après la dernière étape, la fin de l'épinglage : la section suivante prend le relais.
+      removeSettler = addSettler((direction, y) =>
+        y < st.start - 2 || y > restY(st, STEPS.length - 1) + 2
+          ? undefined
+          : pickRest([st.start, ...STEPS.map((_, i) => restY(st, i))], y, direction),
+      );
     }, root);
     return () => {
+      removeSettler();
       trigger.current = null;
       tl.current = null;
       ctx.revert();
@@ -158,7 +181,7 @@ export function Steps() {
   const go = (i: number) => {
     const st = trigger.current;
     if (st) {
-      window.scrollTo({ top: st.start + ((st.end - st.start) * (i + 0.97)) / STEPS.length, behavior: "instant" });
+      scrollToY(restY(st, i), { duration: 0.9 });
     } else {
       tl.current?.progress((i + 0.99) / STEPS.length);
       setActive(i);

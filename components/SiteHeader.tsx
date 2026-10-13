@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Totem } from "./Totem";
+import { MobileMenu } from "./MobileMenu";
 
 export function SiteHeader({ home = false }: { home?: boolean }) {
   const base = home ? "" : "/";
@@ -21,6 +22,15 @@ export function SiteHeader({ home = false }: { home?: boolean }) {
         <a className="site-header__cta" href={`${base}#contact`}>
           Commencer par un diagnostic
         </a>
+        <MobileMenu
+          items={[
+            { href: `${base}#methode`, label: "Méthode" },
+            { href: `${base}#travaux`, label: "Travaux" },
+            { href: `${base}#studio`, label: "Studio" },
+            { href: "/galerie/", label: "Galerie", route: true },
+          ]}
+          cta={{ href: `${base}#contact`, label: "Commencer par un diagnostic" }}
+        />
       </div>
     </header>
   );

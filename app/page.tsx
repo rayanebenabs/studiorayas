@@ -9,7 +9,7 @@ import { GalleryTeaser } from "@/components/home/GalleryTeaser";
 import { Owned } from "@/components/home/Owned";
 import { Contact } from "@/components/home/Contact";
 import { SiteFooter } from "@/components/SiteFooter";
-import { SectionStops } from "@/components/SectionStops";
+import { ScrollFlow } from "@/components/ScrollFlow";
 
 export default function Home() {
   return (
@@ -25,7 +25,7 @@ export default function Home() {
       <Owned />
       <Contact />
       <SiteFooter />
-      <SectionStops />
+      <ScrollFlow />
     </main>
   );
 }
