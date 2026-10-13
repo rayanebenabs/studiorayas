@@ -17,6 +17,10 @@ const TOTEM_MASK = `url("data:image/svg+xml,${encodeURIComponent(
 const STEP_DURATION = 1.1; // secondes pour passer d'un service au suivant
 const HOLD = 0.45; // pause après chaque passage, le temps de lire avant le geste suivant
 const SWIPE = 30; // pixels de glissé au doigt pour changer de service
+// Au doigt, le passage est plus vif : le défilement est déjà bloqué pendant l'animation, pas besoin d'une longue pause.
+const STEP_DURATION_TOUCH = 0.7;
+const HOLD_TOUCH = 0.15;
+const isTouch = () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
 
 /**
  * Le hero : un seul totem dont la matière change à chaque phase, par volets.
@@ -58,10 +62,10 @@ export function Hero() {
     travel.current?.kill();
     travel.current = gsap.to(window, {
       scrollTo: { y: st.start + ((st.end - st.start) * i) / LAST, autoKill: false },
-      duration: STEP_DURATION,
+      duration: isTouch() ? STEP_DURATION_TOUCH : STEP_DURATION,
       ease: "power2.inOut",
       onComplete: () => {
-        travel.current = gsap.delayedCall(HOLD, () => {
+        travel.current = gsap.delayedCall(isTouch() ? HOLD_TOUCH : HOLD, () => {
           busy.current = false;
           unhold();
         });
@@ -129,7 +133,7 @@ export function Hero() {
         start: "top top",
         end: () => `+=${window.innerHeight * LAST * 0.9}`,
         pin: true,
-        scrub: 0.5,
+        scrub: isTouch() ? 0.25 : 0.5,
         animation: tl.current,
         // Filet de sécurité (barre de défilement, élan d'un défilement venu d'en dessous) : on se pose sur un service.
         snap: { snapTo: 1 / LAST, inertia: false, delay: 0.25, duration: { min: 0.4, max: 0.9 }, ease: "power2.inOut" },
