@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { gsap, ScrollTrigger, prefersReducedMotion, scrollLock, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
+import { gsap, ScrollTrigger, passWheel, prefersReducedMotion, scrollLock, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
 
 const ARRIVE = 0.5; // secondes pour se poser en haut d'une section
 
@@ -39,16 +39,14 @@ export function SectionStops() {
 
     // Les positions sont mesurées une fois, puis à chaque recalcul de ScrollTrigger (redimensionnement,
     // chargement) : rien n'est lu dans la page pendant le défilement.
-    let cached: number[] = [];
-    let cachedTouch: number[] = [];
+    let stops: number[] = [];
+    let touchStops: number[] = [];
     const measure = () => {
-      cached = measureStops();
-      cachedTouch = measureTouchStops();
+      stops = measureStops();
+      touchStops = measureTouchStops();
     };
     measure();
     ScrollTrigger.addEventListener("refresh", measure);
-    const stops = () => cached;
-    const touchStops = () => cachedTouch;
 
     let busy = false;
     let tween: gsap.core.Tween | null = null;
@@ -77,10 +75,9 @@ export function SectionStops() {
         return;
       }
       const y = window.scrollY;
-      const all = stops();
 
       // Posé sur un arrêt : il faut cumuler un peu de molette pour repartir.
-      if (all.some((s) => Math.abs(y - s) < 2)) {
+      if (stops.some((s) => Math.abs(y - s) < 2)) {
         if (afterStop && tail) {
           e.preventDefault();
           return;
@@ -89,15 +86,15 @@ export function SectionStops() {
         effort += delta;
         if (Math.abs(effort) >= WHEEL_EFFORT) {
           effort = 0;
-          scrollLock.free(delta);
-          return; // ce cran-là fait déjà défiler la page
+          passWheel(e, delta); // ce cran-là fait déjà défiler la page
+          return;
         }
         e.preventDefault();
         return;
       }
 
       // Le cran franchirait le haut d'une section : on s'y pose.
-      const stop = all.find((s) => (dir > 0 ? y < s && y + delta >= s : y > s && y + delta <= s));
+      const stop = stops.find((s) => (dir > 0 ? y < s && y + delta >= s : y > s && y + delta <= s));
       if (stop === undefined) return;
       e.preventDefault();
       busy = true;
@@ -135,8 +132,9 @@ export function SectionStops() {
       fingerDown = true;
       window.clearTimeout(holdTimer);
     };
-    const onTouchMove = () => {
-      touching = true;
+    // Un glissé que le hero garde pour lui (il le bloque) n'est pas un défilement de la page.
+    const onTouchMove = (e: TouchEvent) => {
+      if (!e.defaultPrevented) touching = true;
     };
     const onTouchEnd = () => {
       fingerDown = false;
@@ -148,7 +146,7 @@ export function SectionStops() {
       lastY = y;
       if (!touching || held || busy) return;
       // Un moment franchi pendant ce défilement : on coupe l'élan et on se pose dessus.
-      const stop = touchStops().find((s) => (y > prev ? prev < s && y >= s : prev > s && y <= s));
+      const stop = touchStops.find((s) => (y > prev ? prev < s && y >= s : prev > s && y <= s));
       if (stop === undefined) return;
       held = true;
       scrollLock.hold(); // le verrou coupe l'élan du doigt (iOS comme Android)

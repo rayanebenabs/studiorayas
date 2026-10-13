@@ -50,12 +50,21 @@ export const scrollLock = {
     lastWheel = performance.now();
     if (lockRoot().classList.contains("is-scroll-locked")) settle();
   },
-  /** Libère tout de suite (l'effort pour repartir est fourni) et fait défiler ce cran, que le verrou aurait avalé. */
-  free(delta = 0) {
-    const locked = lockRoot().classList.contains("is-scroll-locked");
+  /** Libère tout de suite : l'effort pour repartir est fourni. */
+  free() {
     holders = 0;
     lastWheel = 0;
     settle();
-    if (locked && delta) window.scrollBy(0, delta);
   },
+};
+
+/**
+ * Fait défiler le cran de molette qui vient de libérer un arrêt. Le site le défile lui-même plutôt que de
+ * laisser faire le navigateur : sinon, selon que le verrou tenait ou non, le cran est avalé ou compté deux fois.
+ */
+export const passWheel = (e: WheelEvent, delta: number) => {
+  scrollLock.free();
+  if (!e.cancelable) return; // geste déjà lancé : le navigateur le défile lui-même
+  e.preventDefault();
+  window.scrollBy(0, delta);
 };

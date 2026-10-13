@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger, prefersReducedMotion, scrollLock, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
+import { gsap, ScrollTrigger, passWheel, prefersReducedMotion, scrollLock, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
 import { BRAND_LINE, PHASES } from "@/content/site";
 import { TOTEM_PATHS, TOTEM_TRANSFORM, TOTEM_VIEWBOX } from "@/lib/totem";
 import { SiteHeader } from "../SiteHeader";
@@ -53,7 +53,7 @@ export function Hero() {
   }, []);
 
   // Amène le défilement sur un service, en douceur, puis marque une pause pour laisser lire.
-  const scrollToPhase = useCallback((i: number, duration?: number) => {
+  const scrollToPhase = useCallback((i: number, { duration, hold = true }: { duration?: number; hold?: boolean } = {}) => {
     const st = trigger.current;
     if (!st) return;
     busy.current = true;
@@ -67,7 +67,7 @@ export function Hero() {
       duration: duration ?? (isTouch() ? STEP_DURATION_TOUCH : STEP_DURATION),
       ease: "power2.inOut",
       onComplete: () => {
-        travel.current = gsap.delayedCall(isTouch() ? HOLD_TOUCH : HOLD, () => {
+        travel.current = gsap.delayedCall(hold ? (isTouch() ? HOLD_TOUCH : HOLD) : 0, () => {
           busy.current = false;
           unhold();
         });
@@ -137,8 +137,6 @@ export function Hero() {
         pin: true,
         scrub: isTouch() ? 0.1 : 0.5,
         animation: tl.current,
-        // Filet de sécurité (barre de défilement, élan d'un défilement venu d'en dessous) : on se pose sur un service.
-        snap: { snapTo: 1 / LAST, inertia: false, delay: 0.25, duration: { min: 0.4, max: 0.9 }, ease: "power2.inOut" },
         onUpdate: (self) => setPhase(Math.round(self.progress * LAST)),
       });
 
@@ -158,6 +156,7 @@ export function Hero() {
         return st.start + ((st.end - st.start) * f) / LAST;
       };
       const clampPhase = (f: number) => Math.max(0, Math.min(LAST, f));
+      const between = (pos: number) => Math.abs(pos - Math.round(pos)) > 0.01;
       // Renvoie vrai quand le hero garde le geste pour lui (le défilement natif est alors bloqué).
       const handle = (dir: number, advance = true) => {
         const pos = position();
@@ -212,7 +211,7 @@ export function Hero() {
                 // L'effort est fourni : ce cran-là fait déjà défiler la page.
                 effort = 0;
                 released = true;
-                scrollLock.free(delta);
+                passWheel(e, delta);
                 return;
               }
             }
@@ -237,6 +236,7 @@ export function Hero() {
           return;
         }
         follow(clampPhase(wheelBase + (effort / WHEEL_EFFORT) * WHEEL_PREVIEW), 0.25);
+        // Sans le cran suivant, l'animation revient sur son service.
         settle = window.setTimeout(() => {
           if (busy.current) return;
           effort = 0;
@@ -247,6 +247,7 @@ export function Hero() {
       // Au doigt, l'animation suit le doigt dans les deux sens ; au lâcher, elle se pose sur un service.
       let startY = 0;
       let dir = 0;
+      let fingerDown = false;
       let held = false;
       let base = 0; // position (en services) au moment où le doigt se pose
       let lastY = 0;
@@ -254,6 +255,7 @@ export function Hero() {
       let speed = 0;
       const onTouchStart = (e: TouchEvent) => {
         startY = lastY = e.touches[0].clientY;
+        fingerDown = true;
         lastT = performance.now();
         speed = 0;
         dir = 0;
@@ -287,6 +289,7 @@ export function Hero() {
         window.scrollTo({ top: phaseY(f), behavior: "instant" });
       };
       const onTouchEnd = () => {
+        fingerDown = false;
         if (!held) return;
         held = false;
         const pos = position();
@@ -299,8 +302,18 @@ export function Hero() {
         if (Math.abs(speed) > FLICK) target = speed > 0 ? next : prev;
         else if (Math.abs(moved) > 0.25) target = moved > 0 ? next : prev;
         target = clampPhase(target);
-        scrollToPhase(target, Math.max(0.25, Math.abs(target - pos) * STEP_DURATION_TOUCH));
+        scrollToPhase(target, { duration: Math.max(0.25, Math.abs(target - pos) * STEP_DURATION_TOUCH) });
       };
+
+      // Quand le défilement s'arrête entre deux services (barre de défilement, élan venu d'en dessous),
+      // le hero se pose sur le plus proche. Jamais pendant un geste : doigt posé ou molette en cours.
+      const onScrollEnd = () => {
+        const pos = position();
+        if (pos === null || !between(pos) || busy.current || fingerDown) return;
+        if (performance.now() - lastWheel < WHEEL_RESET + 50) return;
+        scrollToPhase(Math.round(pos), { duration: 0.5, hold: false });
+      };
+      ScrollTrigger.addEventListener("scrollEnd", onScrollEnd);
 
       const onKey = (e: KeyboardEvent) => {
         if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
@@ -330,6 +343,7 @@ export function Hero() {
           preview?.kill();
         },
         () => window.removeEventListener("keydown", onKey),
+        () => ScrollTrigger.removeEventListener("scrollEnd", onScrollEnd),
       ];
 
       // Parallaxe légère à la souris.
