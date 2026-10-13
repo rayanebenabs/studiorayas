@@ -5,9 +5,13 @@ import { gsap, prefersReducedMotion, scrollLock, WHEEL_EFFORT, WHEEL_RESET } fro
 
 const ARRIVE = 0.5; // secondes pour se poser en haut d'une section
 
+const TOUCH_HOLD = 350; // millisecondes d'arrêt au doigt, une fois le doigt levé
+
 /**
  * Un arrêt en haut de chaque section de la page d'accueil (hors hero, qui a ses propres arrêts).
  * La molette se pose sur le début de la section, puis demande un petit effort pour repartir.
+ * Au doigt, l'élan s'annule dès qu'il atteint un moment de la page : le haut d'une section,
+ * le début ou la fin d'une animation épinglée (le hero compris). Le geste suivant repart librement.
  */
 export function SectionStops() {
   useEffect(() => {
@@ -22,6 +26,17 @@ export function SectionStops() {
           return Math.round(box.getBoundingClientRect().top + window.scrollY);
         });
 
+    // Au doigt : les hauts de section, plus la fin de chaque section épinglée (fin de son animation).
+    const touchStops = () => {
+      const out = stops();
+      document.querySelectorAll<HTMLElement>("main > .pin-spacer > section").forEach((sec) => {
+        const spacer = sec.parentElement as HTMLElement;
+        const top = spacer.getBoundingClientRect().top + window.scrollY;
+        out.push(Math.round(top + spacer.offsetHeight - sec.offsetHeight));
+      });
+      return out;
+    };
+
     let busy = false;
     let tween: gsap.core.Tween | null = null;
     let lastWheel = 0;
@@ -32,6 +47,7 @@ export function SectionStops() {
     const onWheel = (e: WheelEvent) => {
       if (e.defaultPrevented || e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
       scrollLock.wheel();
+      touching = false;
       const now = performance.now();
       const delta = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
       const d = Math.abs(delta);
@@ -86,10 +102,64 @@ export function SectionStops() {
       });
     };
 
+    let touching = false; // le dernier défilement vient d'un glissé (pas d'un tap sur un lien du menu)
+    let fingerDown = false;
+    let held = false;
+    let lastY = window.scrollY;
+    let holdTimer = 0;
+    const releaseTouch = () => {
+      window.clearTimeout(holdTimer);
+      if (fingerDown) return; // on relâche quand le doigt se lève
+      holdTimer = window.setTimeout(() => {
+        if (!held) return;
+        held = false;
+        lastY = window.scrollY;
+        scrollLock.release();
+      }, TOUCH_HOLD);
+    };
+    const onTouchStart = () => {
+      touching = false;
+      fingerDown = true;
+      window.clearTimeout(holdTimer);
+    };
+    const onTouchMove = () => {
+      touching = true;
+    };
+    const onTouchEnd = () => {
+      fingerDown = false;
+      if (held) releaseTouch();
+    };
+    const onScroll = () => {
+      const y = window.scrollY;
+      const prev = lastY;
+      lastY = y;
+      if (!touching || held || busy) return;
+      // Un moment franchi pendant ce défilement : on coupe l'élan et on se pose dessus.
+      const stop = touchStops().find((s) => (y > prev ? prev < s && y >= s : prev > s && y <= s));
+      if (stop === undefined) return;
+      held = true;
+      scrollLock.hold(); // le verrou coupe l'élan du doigt (iOS comme Android)
+      window.scrollTo({ top: stop, behavior: "instant" });
+      lastY = stop;
+      releaseTouch();
+    };
+
     window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(holdTimer);
       if (busy) scrollLock.release();
+      if (held) scrollLock.release();
       tween?.kill();
     };
   }, []);
