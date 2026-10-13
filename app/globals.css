@@ -268,6 +268,7 @@ p {
 .hero {
   position: relative;
   height: 100vh;
+  height: 100svh;
   min-height: 640px;
   overflow: hidden;
   background: var(--sr-color-bg);
@@ -284,7 +285,7 @@ p {
 .hero__wheel {
   position: absolute;
   left: 50%;
-  top: calc(100% + var(--R) * 0.22);
+  top: calc(100% + var(--R) * 0.4);
   width: 0;
   height: 0;
 }
@@ -331,10 +332,10 @@ p {
 }
 
 .hero__totem {
-  --th: 58vh;
+  --th: 50vh;
   position: absolute;
   left: calc(50% - var(--th) * 9 / 32);
-  top: 15vh;
+  top: 17vh;
   height: var(--th);
   aspect-ratio: 9 / 16;
   z-index: 2;
@@ -390,13 +391,20 @@ p {
 
 .hero__side {
   position: absolute;
-  top: 22vh;
+  top: 21vh;
   z-index: 3;
 }
 
+/* Le service en cours : c'est lui qu'on lit, il porte la hiérarchie à côté du totem. */
 .hero__side--left {
-  left: clamp(var(--sr-space-4), 8vw, 120px);
-  max-width: 28vw;
+  left: clamp(var(--sr-space-4), 7vw, 112px);
+  width: min(32vw, 30rem);
+  padding-top: var(--sr-space-4);
+  border-top: 1px solid var(--sr-color-text);
+}
+
+.hero[data-dark="true"] .hero__side--left {
+  border-top-color: var(--sr-color-craie);
 }
 
 .hero__side--right {
@@ -408,18 +416,24 @@ p {
   font-family: var(--sr-font-display);
   font-style: italic;
   font-weight: var(--sr-font-weight-light);
-  font-size: clamp(2rem, 3.9vw, 3.5rem);
+  font-size: clamp(2.6rem, 4.2vw, 4.5rem);
   line-height: 1;
   margin-top: var(--sr-space-3);
+  padding-bottom: 0.08em;
 }
 
 .hero__line {
   margin-top: var(--sr-space-4);
-  color: var(--sr-color-text-muted);
-  max-width: 22em;
+  color: var(--sr-color-text);
+  font-size: var(--sr-text-xl);
+  line-height: var(--sr-leading-snug);
+  max-width: 20em;
 }
 
-.hero[data-dark="true"] .hero__line,
+.hero[data-dark="true"] .hero__line {
+  color: var(--sr-color-craie);
+}
+
 .hero[data-dark="true"] .sr-eyebrow {
   color: var(--sr-color-sable);
 }
@@ -492,7 +506,7 @@ p {
   text-align: center;
   font-family: var(--sr-font-display);
   font-weight: var(--sr-font-weight-light);
-  font-size: clamp(2.4rem, 7.2vw, 6.5rem);
+  font-size: clamp(2.2rem, 6vw, 5.5rem);
   line-height: var(--sr-leading-tight);
   letter-spacing: var(--sr-tracking-tight);
   padding: 0 var(--sr-space-4);
@@ -513,8 +527,8 @@ p {
 
 @media (max-width: 900px) {
   .hero__side--left {
-    top: 12vh;
-    max-width: none;
+    top: 13vh;
+    width: auto;
     right: var(--sr-space-4);
   }
   .hero__side--right {
@@ -522,15 +536,19 @@ p {
     bottom: 22vh;
   }
   .hero__totem {
-    --th: 38vh;
-    top: 24vh;
+    --th: 30vh;
+    top: 36vh;
   }
   .site-header__cta {
     max-width: 11em;
     text-align: right;
   }
+  .hero__phase {
+    font-size: clamp(2.2rem, 10vw, 3rem);
+  }
   .hero__line {
-    display: none;
+    margin-top: var(--sr-space-2);
+    font-size: var(--sr-text-base);
   }
   .hero__count {
     display: none;
