@@ -4,3 +4,9 @@ out/
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+
+# Mesures de performance (traces Chrome)
+/*.json
+!package.json
+!package-lock.json
+!tsconfig.json
