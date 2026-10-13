@@ -13,10 +13,12 @@ import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { tokens } from "../brand/build/tokens.js";
 
 const RULES =
   "couleur.fond = craie · accent = terre, un par écran · rayon = 0 · ombre = aucune · dégradé = aucun · titre = Cormorant 300 · texte = Archivo · adresse = vous · ";
-const ENCRE = "#17120F"; // --sr-color-encre (brand/tokens.json)
+const INK = tokens.light.color.palette.encre; // l'encre de la marque, en clair : l'image ne lit pas les variables CSS
+const BODY = tokens.light.font.family.body; // la police de texte de la marque
 const WIDTH = 1080; // px : net jusqu'à un totem de 600 px de haut sur écran Retina
 const U = WIDTH / 9000;
 const LINES = 72;
@@ -25,10 +27,10 @@ const HEIGHT = Math.round((110 + LINES * 250) * U);
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const font = readFileSync(path.join(root, "node_modules/@fontsource/archivo/files/archivo-latin-400-normal.woff2")).toString("base64");
 const html = `<!doctype html><meta charset="utf-8"><style>
-@font-face { font-family: Archivo; src: url(data:font/woff2;base64,${font}) format("woff2"); }
+@font-face { font-family: ${BODY.split(",")[0]}; src: url(data:font/woff2;base64,${font}) format("woff2"); }
 html, body { margin: 0; background: transparent; }
 #r { width: ${WIDTH}px; height: ${HEIGHT}px; overflow: hidden; padding-top: ${110 * U}px; box-sizing: border-box;
-  font: 400 ${190 * U}px/${250 * U}px Archivo; color: ${ENCRE}; white-space: nowrap; }
+  font: 400 ${190 * U}px/${250 * U}px ${BODY}; color: ${INK}; white-space: nowrap; }
 #r p { margin: 0; }
 #r p:nth-child(even) { margin-left: ${-1200 * U}px; }
 </style><div id="r">${Array.from({ length: LINES }, () => `<p>${RULES.repeat(2)}</p>`).join("")}</div>`;
@@ -47,7 +49,7 @@ const squeeze = `
 from PIL import Image
 im = Image.open(${JSON.stringify(out)}); lv = 16
 pal = Image.new("P", im.size); pal.putdata([round(v * (lv - 1) / 255) for v in im.getchannel("A").getdata()])
-pal.putpalette([0x17, 0x12, 0x0F] * lv)
+pal.putpalette(list(bytes.fromhex(${JSON.stringify(INK.slice(1))})) * lv)
 pal.save(${JSON.stringify(out)}, optimize=True, transparency=bytes(round(i * 255 / (lv - 1)) for i in range(lv)))
 `;
 const py = spawnSync("python3", ["-c", squeeze], { stdio: "inherit" });
