@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger, prefersReducedMotion, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
+import { gsap, ScrollTrigger, prefersReducedMotion, scrollLock, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
 import { BRAND_LINE, PHASES } from "@/content/site";
 import { TOTEM_PATHS, TOTEM_TRANSFORM, TOTEM_VIEWBOX } from "@/lib/totem";
 import { SiteHeader } from "../SiteHeader";
@@ -38,12 +38,22 @@ export function Hero() {
   const first = useRef(true);
   const busy = useRef(false);
   const travel = useRef<gsap.core.Tween | null>(null);
+  const holding = useRef(false);
+  const unhold = useCallback(() => {
+    if (!holding.current) return;
+    holding.current = false;
+    scrollLock.release();
+  }, []);
 
   // Amène le défilement sur un service, en douceur, puis marque une pause pour laisser lire.
   const scrollToPhase = useCallback((i: number) => {
     const st = trigger.current;
     if (!st) return;
     busy.current = true;
+    if (!holding.current) {
+      holding.current = true;
+      scrollLock.hold();
+    }
     travel.current?.kill();
     travel.current = gsap.to(window, {
       scrollTo: { y: st.start + ((st.end - st.start) * i) / LAST, autoKill: false },
@@ -52,10 +62,11 @@ export function Hero() {
       onComplete: () => {
         travel.current = gsap.delayedCall(HOLD, () => {
           busy.current = false;
+          unhold();
         });
       },
     });
-  }, []);
+  }, [unhold]);
 
   const buildTimeline = useCallback(() => {
     const [encre, terre, craie] = fills.current;
@@ -158,6 +169,7 @@ export function Hero() {
       };
       const onWheel = (e: WheelEvent) => {
         if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+        scrollLock.wheel();
         const now = performance.now();
         const delta = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY; // molettes réglées en lignes
         const d = Math.abs(delta);
@@ -181,6 +193,7 @@ export function Hero() {
                 // L'effort est fourni : ce cran-là fait déjà défiler la page.
                 effort = 0;
                 released = true;
+                scrollLock.free(delta);
                 return;
               }
             }
@@ -270,11 +283,12 @@ export function Hero() {
     return () => {
       travel.current?.kill();
       busy.current = false;
+      unhold();
       trigger.current = null;
       tl.current = null;
       ctx.revert();
     };
-  }, [buildTimeline, scrollToPhase]);
+  }, [buildTimeline, scrollToPhase, unhold]);
 
   // Le nom du service glisse dans son masque à chaque changement de phase.
   useEffect(() => {

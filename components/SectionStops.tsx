@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { gsap, prefersReducedMotion, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
+import { gsap, prefersReducedMotion, scrollLock, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
 
 const ARRIVE = 0.5; // secondes pour se poser en haut d'une section
 
@@ -31,6 +31,7 @@ export function SectionStops() {
 
     const onWheel = (e: WheelEvent) => {
       if (e.defaultPrevented || e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      scrollLock.wheel();
       const now = performance.now();
       const delta = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
       const d = Math.abs(delta);
@@ -59,6 +60,7 @@ export function SectionStops() {
         effort += delta;
         if (Math.abs(effort) >= WHEEL_EFFORT) {
           effort = 0;
+          scrollLock.free(delta);
           return; // ce cran-là fait déjà défiler la page
         }
         e.preventDefault();
@@ -72,12 +74,14 @@ export function SectionStops() {
       busy = true;
       effort = 0;
       afterStop = true;
+      scrollLock.hold();
       tween = gsap.to(window, {
         scrollTo: { y: stop, autoKill: false },
         duration: ARRIVE,
         ease: "power2.out",
         onComplete: () => {
           busy = false;
+          scrollLock.release();
         },
       });
     };
@@ -85,6 +89,7 @@ export function SectionStops() {
     window.addEventListener("wheel", onWheel, { passive: false });
     return () => {
       window.removeEventListener("wheel", onWheel);
+      if (busy) scrollLock.release();
       tween?.kill();
     };
   }, []);
