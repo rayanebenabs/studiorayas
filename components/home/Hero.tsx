@@ -6,6 +6,7 @@ import { addSettler, jumpToY, pickRest, scrollToY } from "@/lib/scroll";
 import { BRAND_LINE, PHASES } from "@/content/site";
 import { TOTEM_PATHS, TOTEM_TRANSFORM, TOTEM_VIEWBOX } from "@/lib/totem";
 import { SiteHeader } from "../SiteHeader";
+import { tokens } from "@/brand/build/tokens.js";
 
 const STEP = 36; // degrés entre deux cartes : 10 cartes, chaque service apparaît deux fois sur la roue
 const LAST = PHASES.length - 1;
@@ -22,10 +23,16 @@ const DRAG = 0.45; // part de la hauteur d'écran que le doigt parcourt pour un 
 const FLICK = 0.5; // vitesse du doigt (px/ms) au-delà de laquelle un lancer passe au service suivant
 const INTENT = 0.2; // part d'un service à franchir pour que le calage aille vers le suivant
 
+/** Vrai si la page s'affiche en mode sombre (réglage du site, sinon celui de l'appareil). */
+const isDarkTheme = () => {
+  const forced = document.documentElement.dataset.theme;
+  return forced ? forced === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+};
+
 /**
  * Le hero : un seul totem dont la matière change à chaque phase, par volets.
- * 01 trait · 02 l'encre monte · 03 l'encre se retire sur les règles · 04 la terre monte · 05 la nuit s'ouvre
- * (le jour, en mode sombre).
+ * 01 trait · 02 l'encre monte · 03 l'encre se retire sur les règles · 04 la terre monte · 05 la nuit s'ouvre.
+ * En mode sombre, le totem garde ces couleurs sur un ovale craie, et au 05 c'est le jour qui s'ouvre.
  */
 export function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -33,6 +40,7 @@ export function Hero() {
   const wheelIntro = useRef<HTMLDivElement>(null);
   const totem = useRef<HTMLDivElement>(null);
   const night = useRef<HTMLDivElement>(null);
+  const outline = useRef<SVGSVGElement>(null);
   const rules = useRef<HTMLDivElement>(null);
   const ticker = useRef<HTMLDivElement>(null);
   const fills = useRef<(HTMLDivElement | null)[]>([]);
@@ -60,6 +68,12 @@ export function Hero() {
     const t = gsap.timeline({ paused: true, defaults: { ease: "none" } });
     t.to(wheel.current, { rotation: -LAST * STEP, duration: LAST }, 0);
 
+    // Mode sombre : un ovale craie s'ouvre derrière le totem, qui garde ainsi les couleurs du mode clair
+    // (encre, règles à l'encre, terre). Son contour passe à l'encre sur la craie.
+    if (isDarkTheme()) {
+      t.fromTo(night.current, { "--disc": 0 }, { "--disc": 1, duration: 0.6, ease: "power3.inOut" }, 0.35);
+      t.fromTo(outline.current, { color: tokens.light.color.palette.craie }, { color: tokens.light.color.palette.encre, duration: 0.3 }, 0.5);
+    }
     // 01 → 02 : l'encre remplit le totem de bas en haut.
     t.fromTo(encre, { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: "power3.inOut" }, 0.35);
     t.set(rules.current, { opacity: 1 }, 0.95);
@@ -70,7 +84,7 @@ export function Hero() {
     // 03 → 04 : la terre monte.
     t.fromTo(terre, { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: "power3.inOut" }, 2.35);
     // 04 → 05 : la nuit s'ouvre en cercle depuis le totem, le totem passe en craie.
-    t.fromTo(night.current, { clipPath: "circle(0% at 50% 44%)" }, { clipPath: "circle(150% at 50% 44%)", duration: 0.7, ease: "power3.inOut" }, 3.3);
+    t.fromTo(night.current, { "--open": 0 }, { "--open": 1, duration: 0.7, ease: "power3.inOut" }, 3.3);
     t.fromTo(craie, { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: "power3.inOut" }, 3.35);
 
     // Le totem respire à chaque passage.
@@ -285,8 +299,8 @@ export function Hero() {
           <div ref={rules} className="hero__rules" style={{ opacity: 0 }}>
             <div ref={ticker} className="hero__ticker" />
           </div>
-          {/* L'encre monte, la terre monte, puis le papier : l'encre et le papier du thème en cours. */}
-          {["var(--page-ink)", "var(--sr-color-terre)", "var(--page-paper)"].map((c, i) => (
+          {/* L'encre monte, la terre monte, puis le papier du thème en cours (craie en clair, encre en sombre). */}
+          {["var(--sr-color-encre)", "var(--sr-color-terre)", "var(--page-paper)"].map((c, i) => (
             <div
               key={c}
               ref={(el) => {
@@ -297,7 +311,7 @@ export function Hero() {
             />
           ))}
         </div>
-        <svg viewBox={TOTEM_VIEWBOX} role="img" aria-label="Totem Studio Rayas">
+        <svg ref={outline} viewBox={TOTEM_VIEWBOX} role="img" aria-label="Totem Studio Rayas">
           <g className="hero__outline" transform={TOTEM_TRANSFORM}>
             {TOTEM_PATHS.map((d) => (
               <path key={d.slice(0, 24)} d={d} pathLength={1} strokeDasharray="1" />

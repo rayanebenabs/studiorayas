@@ -1,5 +1,5 @@
-// Dessine les règles du totem (le texte qui défile sur le service Brand OS) en deux images :
-// public/totem-rules.png (encre, mode clair) et public/totem-rules-dark.png (craie, mode sombre).
+// Dessine les règles du totem (le texte qui défile sur le service Brand OS) en une image : public/totem-rules.png.
+// Elles s'écrivent à l'encre dans les deux modes (en sombre, le totem est posé sur un ovale craie).
 // Une image glisse sans effort dans le totem, là où des milliers de lettres faisaient saccader Safari.
 //
 // À relancer si le texte des règles change :
@@ -21,7 +21,6 @@ const RULES =
 // Les couleurs de la marque, en clair : une image ne lit pas les variables CSS.
 const VERSIONS = [
   { file: "totem-rules.png", ink: tokens.light.color.palette.encre },
-  { file: "totem-rules-dark.png", ink: tokens.light.color.palette.craie },
 ];
 const BODY = tokens.light.font.family.body; // la police de texte de la marque
 const WIDTH = 1080; // px : net jusqu'à un totem de 600 px de haut sur écran Retina

@@ -395,6 +395,10 @@ html.is-scroll-locked {
 /* ---------- Hero : le totem et ses phases ---------- */
 
 .hero {
+  --th: 50vh; /* hauteur du totem */
+  --tt: 17vh; /* haut du totem */
+  --disc: 0;
+  --open: 0;
   position: relative;
   height: 100vh;
   height: 100svh;
@@ -475,11 +479,10 @@ html.is-scroll-locked {
 }
 
 .hero__totem {
-  --th: 50vh;
   --u: calc(var(--th) / 16000); /* une unité du viewBox du totem (9000 x 16000) */
   position: absolute;
   left: calc(50% - var(--th) * 9 / 32);
-  top: 17vh;
+  top: var(--tt);
   height: var(--th);
   aspect-ratio: 9 / 16;
   z-index: 2;
@@ -524,23 +527,17 @@ html.is-scroll-locked {
   will-change: transform;
 }
 
-/* En sombre, les règles s'écrivent en craie. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .hero__ticker {
-    background-image: url("/totem-rules-dark.png");
-  }
-}
-
-:root[data-theme="dark"] .hero__ticker {
-  background-image: url("/totem-rules-dark.png");
-}
-
+/* La couche qui s'ouvre derrière le totem, dans la couleur opposée au fond.
+   --disc (0 à 1) : un ovale posé derrière le totem (mode sombre, pour qu'il garde ses couleurs du mode clair).
+   --open (0 à 1) : la couche gagne tout l'écran (la nuit en clair, le jour en sombre). */
 .hero__night {
+  --rx: calc(var(--disc) * var(--th) * 0.36 + var(--open) * 150vmax);
+  --ry: calc(var(--disc) * var(--th) * 0.56 + var(--open) * 150vmax);
   position: absolute;
   inset: 0;
   z-index: 0;
   background: var(--page-ink);
-  clip-path: circle(0% at 50% 44%);
+  clip-path: ellipse(var(--rx) var(--ry) at 50% calc(var(--tt) + var(--th) / 2));
 }
 
 .hero__wheel-intro {
@@ -580,7 +577,7 @@ html.is-scroll-locked {
 /* Le service en cours : c'est lui qu'on lit, il porte la hiérarchie à côté du totem. */
 .hero__side--left {
   left: clamp(var(--sr-space-4), 7vw, 112px);
-  width: min(32vw, 30rem);
+  width: min(29vw, 27rem);
   padding-top: var(--sr-space-4);
   border-top: 1px solid var(--sr-color-text);
 }
@@ -697,9 +694,9 @@ html.is-scroll-locked {
     top: auto;
     bottom: 22vh;
   }
-  .hero__totem {
+  .hero {
     --th: 30vh;
-    top: 36vh;
+    --tt: 36vh;
   }
   .hero__phase {
     font-size: clamp(2.2rem, 10vw, 3rem);
