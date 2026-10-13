@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { gsap, prefersReducedMotion, scrollLock, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
+import { gsap, ScrollTrigger, prefersReducedMotion, scrollLock, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
 
 const ARRIVE = 0.5; // secondes pour se poser en haut d'une section
 
@@ -18,7 +18,7 @@ export function SectionStops() {
     if (prefersReducedMotion()) return;
 
     // Le haut de chaque section, mesuré sur son espaceur quand elle est épinglée.
-    const stops = () =>
+    const measureStops = () =>
       Array.from(document.querySelectorAll<HTMLElement>("main > section, main > .pin-spacer > section"))
         .slice(1)
         .map((s) => {
@@ -27,8 +27,8 @@ export function SectionStops() {
         });
 
     // Au doigt : les hauts de section, plus la fin de chaque section épinglée (fin de son animation).
-    const touchStops = () => {
-      const out = stops();
+    const measureTouchStops = () => {
+      const out = measureStops();
       document.querySelectorAll<HTMLElement>("main > .pin-spacer > section").forEach((sec) => {
         const spacer = sec.parentElement as HTMLElement;
         const top = spacer.getBoundingClientRect().top + window.scrollY;
@@ -36,6 +36,19 @@ export function SectionStops() {
       });
       return out;
     };
+
+    // Les positions sont mesurées une fois, puis à chaque recalcul de ScrollTrigger (redimensionnement,
+    // chargement) : rien n'est lu dans la page pendant le défilement.
+    let cached: number[] = [];
+    let cachedTouch: number[] = [];
+    const measure = () => {
+      cached = measureStops();
+      cachedTouch = measureTouchStops();
+    };
+    measure();
+    ScrollTrigger.addEventListener("refresh", measure);
+    const stops = () => cached;
+    const touchStops = () => cachedTouch;
 
     let busy = false;
     let tween: gsap.core.Tween | null = null;
@@ -152,6 +165,7 @@ export function SectionStops() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("wheel", onWheel);
+      ScrollTrigger.removeEventListener("refresh", measure);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("touchend", onTouchEnd);

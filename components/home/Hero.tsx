@@ -8,10 +8,12 @@ import { SiteHeader } from "../SiteHeader";
 
 const STEP = 36; // degrés entre deux cartes : 10 cartes, chaque service apparaît deux fois sur la roue
 const LAST = PHASES.length - 1;
-const VB_H = 16000;
 const RULES =
   "couleur.fond = craie · accent = terre, un par écran · rayon = 0 · ombre = aucune · dégradé = aucun · titre = Cormorant 300 · texte = Archivo · adresse = vous · ";
-const RULE_GAP = 250;
+// La silhouette du totem, en masque CSS (mêmes tracés que le contour).
+const TOTEM_MASK = `url("data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${TOTEM_VIEWBOX}"><g transform="${TOTEM_TRANSFORM}">${TOTEM_PATHS.map((d) => `<path d="${d}"/>`).join("")}</g></svg>`,
+)}")`;
 const STEP_DURATION = 1.1; // secondes pour passer d'un service au suivant
 const HOLD = 0.45; // pause après chaque passage, le temps de lire avant le geste suivant
 const SWIPE = 30; // pixels de glissé au doigt pour changer de service
@@ -26,9 +28,8 @@ export function Hero() {
   const wheelIntro = useRef<HTMLDivElement>(null);
   const totem = useRef<HTMLDivElement>(null);
   const night = useRef<HTMLDivElement>(null);
-  const rules = useRef<SVGGElement>(null);
-  const ticker = useRef<SVGGElement>(null);
-  const fills = useRef<(SVGRectElement | null)[]>([]);
+  const rules = useRef<HTMLDivElement>(null);
+  const fills = useRef<(HTMLDivElement | null)[]>([]);
   const cards = useRef<(HTMLDivElement | null)[]>([]);
   const segs = useRef<(HTMLSpanElement | null)[]>([]);
   const phaseText = useRef<HTMLDivElement>(null);
@@ -70,19 +71,21 @@ export function Hero() {
 
   const buildTimeline = useCallback(() => {
     const [encre, terre, craie] = fills.current;
+    // Le CSS cache les aplats sous le totem (translateY 100 %) avant l'hydratation : GSAP reprend la main en pourcentage.
+    gsap.set(fills.current, { y: 0, yPercent: 100 });
     const t = gsap.timeline({ paused: true, defaults: { ease: "none" } });
     t.to(wheel.current, { rotation: -LAST * STEP, duration: LAST }, 0);
 
     // 01 → 02 : l'encre remplit le totem de bas en haut.
-    t.fromTo(encre, { attr: { y: VB_H } }, { attr: { y: 0 }, duration: 0.6, ease: "power3.inOut" }, 0.35);
+    t.fromTo(encre, { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: "power3.inOut" }, 0.35);
     t.set(rules.current, { opacity: 1 }, 0.95);
     // 02 → 03 : l'encre se retire vers le haut et découvre les règles.
-    t.to(encre, { attr: { y: -VB_H }, duration: 0.6, ease: "power3.inOut" }, 1.35);
+    t.to(encre, { yPercent: -100, duration: 0.6, ease: "power3.inOut" }, 1.35);
     // 03 → 04 : la terre monte.
-    t.fromTo(terre, { attr: { y: VB_H } }, { attr: { y: 0 }, duration: 0.6, ease: "power3.inOut" }, 2.35);
+    t.fromTo(terre, { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: "power3.inOut" }, 2.35);
     // 04 → 05 : la nuit s'ouvre en cercle depuis le totem, le totem passe en craie.
     t.fromTo(night.current, { clipPath: "circle(0% at 50% 44%)" }, { clipPath: "circle(150% at 50% 44%)", duration: 0.7, ease: "power3.inOut" }, 3.3);
-    t.fromTo(craie, { attr: { y: VB_H } }, { attr: { y: 0 }, duration: 0.6, ease: "power3.inOut" }, 3.35);
+    t.fromTo(craie, { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: "power3.inOut" }, 3.35);
 
     // Le totem respire à chaque passage.
     for (let i = 1; i <= LAST; i++) {
@@ -120,9 +123,6 @@ export function Hero() {
         .fromTo(wheelIntro.current, { rotation: 28, opacity: 0 }, { rotation: 0, opacity: 1, duration: 1.4, ease: "expo.out" }, 0.4)
         .fromTo(".site-header__inner > *", { y: -14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out", stagger: 0.08 }, 0.3)
         .fromTo("[data-intro]", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.06 }, 0.8);
-
-      // Les règles défilent en continu à l'intérieur du totem.
-      gsap.to(ticker.current, { y: -RULE_GAP * 2, duration: 6, ease: "none", repeat: -1 });
 
       trigger.current = ScrollTrigger.create({
         trigger: root.current,
@@ -341,38 +341,28 @@ export function Hero() {
       </div>
 
       <div ref={totem} className="hero__totem">
-        <svg viewBox={TOTEM_VIEWBOX} role="img" aria-label="Totem Studio Rayas">
-          <defs>
-            <clipPath id="hero-totem-clip">
-              {TOTEM_PATHS.map((d) => (
-                <path key={d.slice(0, 24)} d={d} transform={TOTEM_TRANSFORM} />
+        {/* La matière du totem : des calques HTML découpés par un masque CSS. Tout ce qui bouge dedans
+            passe par des transformations, gérées par la carte graphique, sans recalcul de mise en page. */}
+        <div className="hero__matter" style={{ ["--totem-mask" as string]: TOTEM_MASK }} aria-hidden="true">
+          <div ref={rules} className="hero__rules" style={{ opacity: 0 }}>
+            <div className="hero__ticker">
+              {lines.map((i) => (
+                <p key={i}>{RULES.repeat(3)}</p>
               ))}
-            </clipPath>
-          </defs>
-          <g clipPath="url(#hero-totem-clip)">
-            <g ref={rules} className="hero__rules" style={{ opacity: 0 }}>
-              <g ref={ticker}>
-                {lines.map((i) => (
-                  <text key={i} x={i % 2 ? -1200 : 0} y={260 + i * RULE_GAP} fontSize="190">
-                    {RULES.repeat(3)}
-                  </text>
-                ))}
-              </g>
-            </g>
-            {["encre", "terre", "craie"].map((c, i) => (
-              <rect
-                key={c}
-                ref={(el) => {
-                  fills.current[i] = el;
-                }}
-                x="0"
-                y={VB_H}
-                width="9000"
-                height={VB_H}
-                style={{ fill: `var(--sr-color-${c})` }}
-              />
-            ))}
-          </g>
+            </div>
+          </div>
+          {["encre", "terre", "craie"].map((c, i) => (
+            <div
+              key={c}
+              ref={(el) => {
+                fills.current[i] = el;
+              }}
+              className="hero__fill"
+              style={{ background: `var(--sr-color-${c})` }}
+            />
+          ))}
+        </div>
+        <svg viewBox={TOTEM_VIEWBOX} role="img" aria-label="Totem Studio Rayas">
           <g className="hero__outline" transform={TOTEM_TRANSFORM}>
             {TOTEM_PATHS.map((d) => (
               <path key={d.slice(0, 24)} d={d} pathLength={1} strokeDasharray="1" />

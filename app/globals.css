@@ -339,12 +339,14 @@ html.is-scroll-locked {
 
 .hero__totem {
   --th: 50vh;
+  --u: calc(var(--th) / 16000); /* une unité du viewBox du totem (9000 x 16000) */
   position: absolute;
   left: calc(50% - var(--th) * 9 / 32);
   top: 17vh;
   height: var(--th);
   aspect-ratio: 9 / 16;
   z-index: 2;
+  will-change: transform;
 }
 
 .hero__totem svg {
@@ -352,6 +354,54 @@ html.is-scroll-locked {
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.hero__matter {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  -webkit-mask: var(--totem-mask) center / 100% 100% no-repeat;
+  mask: var(--totem-mask) center / 100% 100% no-repeat;
+}
+
+.hero__fill {
+  position: absolute;
+  inset: 0;
+  transform: translateY(100%);
+  will-change: transform;
+}
+
+.hero__rules {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__ticker {
+  padding-top: calc(var(--u) * 110);
+  color: var(--sr-color-encre);
+  font-family: var(--sr-font-body);
+  font-size: calc(var(--u) * 190);
+  line-height: calc(var(--u) * 250);
+  white-space: nowrap;
+  will-change: transform;
+  animation: hero-rules 6s linear infinite;
+}
+
+.hero__ticker p:nth-child(even) {
+  margin-left: calc(var(--u) * -1200);
+}
+
+/* Les règles défilent en continu à l'intérieur du totem. */
+@keyframes hero-rules {
+  to {
+    transform: translateY(calc(var(--u) * -500));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__ticker {
+    animation: none;
+  }
 }
 
 .hero__night {
@@ -373,11 +423,6 @@ html.is-scroll-locked {
   fill: none;
   stroke: currentColor;
   stroke-width: 42;
-}
-
-.hero__rules text {
-  fill: var(--sr-color-encre);
-  font-family: var(--sr-font-body);
 }
 
 .hero__mask {
