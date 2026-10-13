@@ -24,7 +24,8 @@ const INTENT = 0.2; // part d'un service à franchir pour que le calage aille ve
 
 /**
  * Le hero : un seul totem dont la matière change à chaque phase, par volets.
- * 01 trait · 02 l'encre monte · 03 l'encre se retire sur les règles · 04 la terre monte · 05 la nuit s'ouvre.
+ * 01 trait · 02 l'encre monte · 03 l'encre se retire sur les règles · 04 la terre monte · 05 la nuit s'ouvre
+ * (le jour, en mode sombre).
  */
 export function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -251,11 +252,11 @@ export function Hero() {
   };
 
   const p = PHASES[phase];
-  const dark = phase === LAST;
+  const inverted = phase === LAST;
   const wheelCards = Array.from({ length: 10 }, (_, k) => PHASES[k % PHASES.length]);
 
   return (
-    <section ref={root} className="hero" data-dark={dark} id="top" aria-label="Studio Rayas, studio de marque">
+    <section ref={root} className="hero" data-inverted={inverted} id="top" aria-label="Studio Rayas, studio de marque">
       <div ref={night} className="hero__night" aria-hidden="true" />
       <SiteHeader home />
 
@@ -284,14 +285,15 @@ export function Hero() {
           <div ref={rules} className="hero__rules" style={{ opacity: 0 }}>
             <div ref={ticker} className="hero__ticker" />
           </div>
-          {["encre", "terre", "craie"].map((c, i) => (
+          {/* L'encre monte, la terre monte, puis le papier : l'encre et le papier du thème en cours. */}
+          {["var(--page-ink)", "var(--sr-color-terre)", "var(--page-paper)"].map((c, i) => (
             <div
               key={c}
               ref={(el) => {
                 fills.current[i] = el;
               }}
               className="hero__fill"
-              style={{ background: `var(--sr-color-${c})` }}
+              style={{ background: c }}
             />
           ))}
         </div>

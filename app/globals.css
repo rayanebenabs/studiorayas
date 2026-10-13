@@ -14,6 +14,9 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  /* L'encre et le papier du thème en cours, figés ici : le hero s'en sert pour sa matière, même quand il s'inverse. */
+  --page-ink: var(--sr-color-text);
+  --page-paper: var(--sr-color-bg);
 }
 
 img {
@@ -254,10 +257,6 @@ p {
   text-underline-offset: 0.3em;
 }
 
-[data-dark="true"] .site-header__cta {
-  color: var(--sr-color-terre);
-}
-
 /* ---------- Menu mobile ---------- */
 
 .menu-button {
@@ -408,8 +407,32 @@ html.is-scroll-locked {
   --R: clamp(380px, 54vw, 800px);
 }
 
-.hero[data-dark="true"] {
-  color: var(--sr-color-craie);
+/* Le dernier service inverse la matière : en clair, la nuit s'ouvre ; en sombre, le jour se lève.
+   Le hero prend alors les rôles du thème opposé, et tout ce qu'il contient suit (cartes, textes, filets). */
+.hero[data-inverted="true"] {
+  --sr-color-text: var(--sr-color-craie);
+  --sr-color-text-muted: var(--sr-color-sable);
+  --sr-color-surface: var(--sr-color-nuit-2);
+  --sr-color-border: var(--sr-color-cendre);
+  --sr-color-accent: var(--sr-color-terre);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero[data-inverted="true"] {
+    --sr-color-text: var(--sr-color-encre);
+    --sr-color-text-muted: var(--sr-color-cendre);
+    --sr-color-surface: var(--sr-color-blanc);
+    --sr-color-border: var(--sr-color-sable);
+    --sr-color-accent: var(--sr-color-terre-profonde);
+  }
+}
+
+:root[data-theme="dark"] .hero[data-inverted="true"] {
+  --sr-color-text: var(--sr-color-encre);
+  --sr-color-text-muted: var(--sr-color-cendre);
+  --sr-color-surface: var(--sr-color-blanc);
+  --sr-color-border: var(--sr-color-sable);
+  --sr-color-accent: var(--sr-color-terre-profonde);
 }
 
 .hero__wheel {
@@ -438,20 +461,10 @@ html.is-scroll-locked {
     color var(--sr-motion-duration-slow);
 }
 
-.hero[data-dark="true"] .hero__card {
-  background: var(--sr-color-nuit-2);
-  border-color: var(--sr-color-cendre);
-  color: var(--sr-color-craie);
-}
-
 .hero__card-n {
   font-size: var(--sr-text-xs);
   letter-spacing: var(--sr-tracking-wide);
   color: var(--sr-color-text-muted);
-}
-
-.hero[data-dark="true"] .hero__card-n {
-  color: var(--sr-color-sable);
 }
 
 .hero__card-name {
@@ -511,11 +524,22 @@ html.is-scroll-locked {
   will-change: transform;
 }
 
+/* En sombre, les règles s'écrivent en craie. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero__ticker {
+    background-image: url("/totem-rules-dark.png");
+  }
+}
+
+:root[data-theme="dark"] .hero__ticker {
+  background-image: url("/totem-rules-dark.png");
+}
+
 .hero__night {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: var(--sr-color-encre);
+  background: var(--page-ink);
   clip-path: circle(0% at 50% 44%);
 }
 
@@ -561,10 +585,6 @@ html.is-scroll-locked {
   border-top: 1px solid var(--sr-color-text);
 }
 
-.hero[data-dark="true"] .hero__side--left {
-  border-top-color: var(--sr-color-craie);
-}
-
 .hero__side--right {
   right: clamp(var(--sr-space-4), 8vw, 120px);
   text-align: right;
@@ -586,14 +606,6 @@ html.is-scroll-locked {
   font-size: var(--sr-text-xl);
   line-height: var(--sr-leading-snug);
   max-width: 20em;
-}
-
-.hero[data-dark="true"] .hero__line {
-  color: var(--sr-color-craie);
-}
-
-.hero[data-dark="true"] .sr-eyebrow {
-  color: var(--sr-color-sable);
 }
 
 .hero__count {
@@ -627,10 +639,6 @@ html.is-scroll-locked {
 
 .hero__progress span:first-child i {
   transform: scaleX(1);
-}
-
-.hero[data-dark="true"] .hero__progress span {
-  background: var(--sr-color-cendre);
 }
 
 .hero__arrows {
@@ -677,10 +685,6 @@ html.is-scroll-locked {
   z-index: 3;
   font-size: var(--sr-text-xs);
   color: var(--sr-color-text-muted);
-}
-
-.hero[data-dark="true"] .hero__hint {
-  color: var(--sr-color-sable);
 }
 
 @media (max-width: 900px) {

@@ -1,4 +1,5 @@
-// Dessine les règles du totem (le texte qui défile sur le service Brand OS) en une image : public/totem-rules.png.
+// Dessine les règles du totem (le texte qui défile sur le service Brand OS) en deux images :
+// public/totem-rules.png (encre, mode clair) et public/totem-rules-dark.png (craie, mode sombre).
 // Une image glisse sans effort dans le totem, là où des milliers de lettres faisaient saccader Safari.
 //
 // À relancer si le texte des règles change :
@@ -17,7 +18,11 @@ import { tokens } from "../brand/build/tokens.js";
 
 const RULES =
   "couleur.fond = craie · accent = terre, un par écran · rayon = 0 · ombre = aucune · dégradé = aucun · titre = Cormorant 300 · texte = Archivo · adresse = vous · ";
-const INK = tokens.light.color.palette.encre; // l'encre de la marque, en clair : l'image ne lit pas les variables CSS
+// Les couleurs de la marque, en clair : une image ne lit pas les variables CSS.
+const VERSIONS = [
+  { file: "totem-rules.png", ink: tokens.light.color.palette.encre },
+  { file: "totem-rules-dark.png", ink: tokens.light.color.palette.craie },
+];
 const BODY = tokens.light.font.family.body; // la police de texte de la marque
 const WIDTH = 1080; // px : net jusqu'à un totem de 600 px de haut sur écran Retina
 const U = WIDTH / 9000;
@@ -29,7 +34,7 @@ const font = readFileSync(path.join(root, "node_modules/@fontsource/archivo/file
 const html = `<!doctype html><meta charset="utf-8"><style>
 html, body { margin: 0; background: transparent; }
 #r { width: ${WIDTH}px; height: ${HEIGHT}px; overflow: hidden; padding-top: ${110 * U}px; box-sizing: border-box;
-  font: 400 ${190 * U}px/${250 * U}px ${BODY}; color: ${INK}; white-space: nowrap; }
+  font: 400 ${190 * U}px/${250 * U}px ${BODY}; white-space: nowrap; }
 #r p { margin: 0; }
 #r p:nth-child(even) { margin-left: ${-1200 * U}px; }
 </style><div id="r">${Array.from({ length: LINES }, () => `<p>${RULES.repeat(2)}</p>`).join("")}</div>`;
@@ -46,17 +51,19 @@ await page.evaluate(
   },
   [BODY.split(",")[0].replace(/'/g, ""), font],
 );
-await page.locator("#r").screenshot({ path: path.join(root, "public/totem-rules.png"), omitBackground: true });
-await browser.close();
-
-// Une seule couleur, l'encre : seule l'opacité varie. 16 niveaux suffisent à l'œil.
-const out = path.join(root, "public/totem-rules.png");
-const squeeze = `
+for (const v of VERSIONS) {
+  const out = path.join(root, "public", v.file);
+  await page.evaluate((ink) => (document.getElementById("r").style.color = ink), v.ink);
+  await page.locator("#r").screenshot({ path: out, omitBackground: true });
+  // Une seule couleur : seule l'opacité varie. 16 niveaux suffisent à l'œil.
+  const squeeze = `
 from PIL import Image
 im = Image.open(${JSON.stringify(out)}); lv = 16
 pal = Image.new("P", im.size); pal.putdata([round(v * (lv - 1) / 255) for v in im.getchannel("A").getdata()])
-pal.putpalette(list(bytes.fromhex(${JSON.stringify(INK.slice(1))})) * lv)
+pal.putpalette(list(bytes.fromhex(${JSON.stringify(v.ink.slice(1))})) * lv)
 pal.save(${JSON.stringify(out)}, optimize=True, transparency=bytes(round(i * 255 / (lv - 1)) for i in range(lv)))
 `;
-const py = spawnSync("python3", ["-c", squeeze], { stdio: "inherit" });
-console.log(`public/totem-rules.png · ${WIDTH} x ${HEIGHT}${py.status === 0 ? " · compressée" : " · non compressée (Pillow absent)"}`);
+  const py = spawnSync("python3", ["-c", squeeze], { stdio: "inherit" });
+  console.log(`public/${v.file} · ${WIDTH} x ${HEIGHT}${py.status === 0 ? " · compressée" : " · non compressée (Python et Pillow requis)"}`);
+}
+await browser.close();
