@@ -27,7 +27,6 @@ const HEIGHT = Math.round((110 + LINES * 250) * U);
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const font = readFileSync(path.join(root, "node_modules/@fontsource/archivo/files/archivo-latin-400-normal.woff2")).toString("base64");
 const html = `<!doctype html><meta charset="utf-8"><style>
-@font-face { font-family: ${BODY.split(",")[0]}; src: url(data:font/woff2;base64,${font}) format("woff2"); }
 html, body { margin: 0; background: transparent; }
 #r { width: ${WIDTH}px; height: ${HEIGHT}px; overflow: hidden; padding-top: ${110 * U}px; box-sizing: border-box;
   font: 400 ${190 * U}px/${250 * U}px ${BODY}; color: ${INK}; white-space: nowrap; }
@@ -39,7 +38,14 @@ const { chromium } = createRequire(path.join(process.cwd(), "/"))("playwright");
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT } });
 await page.setContent(html);
-await page.evaluate(() => document.fonts.ready);
+// La police de texte, chargée depuis @fontsource avant de dessiner.
+await page.evaluate(
+  async ([name, data]) => {
+    const face = new FontFace(name, `url(data:font/woff2;base64,${data})`);
+    document.fonts.add(await face.load());
+  },
+  [BODY.split(",")[0].replace(/'/g, ""), font],
+);
 await page.locator("#r").screenshot({ path: path.join(root, "public/totem-rules.png"), omitBackground: true });
 await browser.close();
 
