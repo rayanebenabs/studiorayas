@@ -14,6 +14,8 @@ const RULES =
 const RULE_GAP = 250;
 const STEP_DURATION = 1.1; // secondes pour passer d'un service au suivant
 const HOLD = 0.45; // pause après chaque passage, le temps de lire avant le geste suivant
+const WHEEL_EFFORT = 260; // distance de molette à cumuler pour passer au service suivant (2 à 3 crans)
+const WHEEL_RESET = 400; // millisecondes sans molette avant que l'effort cumulé ne retombe
 const SWIPE = 30; // pixels de glissé au doigt pour changer de service
 
 /**
@@ -148,16 +150,35 @@ export function Hero() {
 
       let lastWheel = 0;
       let lastDelta = 0;
+      let effort = 0; // distance de molette cumulée vers le service suivant
+      let afterStep = false; // on vient de changer de service : la traîne du geste ne compte pas
       const onWheel = (e: WheelEvent) => {
         if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
         const now = performance.now();
-        const d = Math.abs(e.deltaY);
+        const delta = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY; // molettes réglées en lignes
+        const d = Math.abs(delta);
+        if (d < 1) return;
+        const dir = Math.sign(delta);
+        // Le geste s'arrête ou change de sens : l'effort repart de zéro.
+        if (now - lastWheel > WHEEL_RESET || Math.sign(effort) !== dir) effort = 0;
         // L'élan d'un pavé tactile envoie une traîne d'événements qui décroissent : ce n'est pas un nouveau geste.
         const tail = now - lastWheel < 150 && d <= lastDelta * 1.2;
         lastWheel = now;
         lastDelta = d;
-        if (d < 1) return;
-        if (handle(Math.sign(e.deltaY), !tail)) e.preventDefault();
+        if (!handle(dir, false)) {
+          effort = 0;
+          return;
+        }
+        e.preventDefault();
+        if (busy.current) return;
+        if (afterStep && tail) return;
+        afterStep = false;
+        effort += delta;
+        if (Math.abs(effort) >= WHEEL_EFFORT) {
+          effort = 0;
+          afterStep = true;
+          handle(dir);
+        }
       };
 
       let startY = 0;
