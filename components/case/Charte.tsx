@@ -1,8 +1,10 @@
 import type { Client } from "@/content/clients";
-import { InavoueLogo } from "./InavoueLogo";
+import { LOGOS } from "@/lib/logos";
+import { ClientLogo } from "./ClientLogo";
 
 /** La charte graphique du client, extraite de son Brand OS. */
 export function Charte({ client }: { client: Client }) {
+  const hasLogo = !!LOGOS[client.slug];
   return (
     <section className="section charte" aria-labelledby="charte-t">
       <div className="container">
@@ -25,8 +27,8 @@ export function Charte({ client }: { client: Client }) {
           <div className="charte__tiles">
             {client.logoTiles.map((t) => (
               <div key={t.bg} className="charte__tile" style={{ background: t.bg, color: t.fg }}>
-                {client.slug === "inavoue" ? (
-                  <InavoueLogo color={t.fg} />
+                {hasLogo ? (
+                  <ClientLogo slug={client.slug} color={t.fg} />
                 ) : (
                   <span style={{ fontFamily: client.logoFont, fontWeight: client.slug === "slayyy" ? 700 : client.slug === "pollen" ? 500 : 300, fontStyle: client.slug === "julie-leroy" ? "italic" : "normal" }}>
                     {client.logoText}
@@ -35,7 +37,7 @@ export function Charte({ client }: { client: Client }) {
               </div>
             ))}
           </div>
-          {client.slug !== "inavoue" && (
+          {!hasLogo && (
             <p className="muted" style={{ fontSize: "var(--sr-text-xs)", marginTop: "var(--sr-space-2)" }}>
               Aperçu typographique du logo. Le fichier source figure dans le branding ci-dessus.
             </p>

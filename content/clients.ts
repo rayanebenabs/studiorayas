@@ -9,7 +9,7 @@ export type ClientSlug = "slayyy" | "julie-leroy" | "inavoue" | "pollen";
 export interface Visual {
   src?: string; // image dans public/
   focus?: string; // point gardé au recadrage, ex. "50% 20%"
-  logo?: "inavoue"; // logo vectoriel rendu en SVG
+  logo?: ClientSlug; // logo vectoriel du client (lib/logos.ts), rendu en SVG
   bg?: string;
   fg?: string;
   alt: string;

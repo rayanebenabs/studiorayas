@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { MOCK_WRONG, getClient, hex, type ClientSlug } from "@/content/clients";
-import { InavoueLogo } from "./InavoueLogo";
+import { ClientLogo } from "./ClientLogo";
 
 export interface MockProps {
   fixed: boolean;
@@ -46,7 +46,7 @@ function SlayyyMock(p: MockProps) {
   return (
     <div className="mock" style={{ background: paper, color: ink, border: `6px solid ${ink}`, borderRadius: 36, padding: "36px 22px 22px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
       <div className="mock__content">
-        <p style={{ fontWeight: 700, fontSize: 22 }}>Slayyy</p>
+        <ClientLogo slug="slayyy" color={ink} className="mock-wordmark" />
         <Spot {...p} id="communaute" label="le titre" style={{ marginTop: 14 }}>
           <span style={{ display: "block", fontWeight: 600, fontSize: 20, lineHeight: 1.25 }}>
             {p.fixed ? "Une photo par jour devient ton lookbook." : "Partage tes plus beaux looks avec la communauté !"}
@@ -110,7 +110,7 @@ function InavoueMock(p: MockProps) {
         {c.brandCheck?.src && <img src={c.brandCheck.src} alt="" style={{ width: "100%", height: 230, objectFit: "cover", objectPosition: c.brandCheck.focus }} />}
         <Spot {...p} id="capitales" label="le nom" style={{ marginTop: 18 }}>
           {p.fixed ? (
-            <InavoueLogo color={cobalt} className="mock-logo" />
+            <ClientLogo slug="inavoue" color={cobalt} className="mock-logo" />
           ) : (
             <span style={{ display: "block", fontWeight: 600, fontSize: 26, letterSpacing: "0.04em", color: cobalt }}>L&apos;INAVOUÉ</span>
           )}
@@ -136,7 +136,11 @@ function PollenMock(p: MockProps) {
       <Spot {...p} id="froid" label="la couleur de fond" bg style={{ background: p.fixed ? hex(c, "orange") : MOCK_WRONG.pollenBlue }} />
       <div className="mock__content" style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <Spot {...p} id="serif" label="le logo" style={{ width: "auto", display: "inline-block", alignSelf: "flex-start" }}>
-          <span style={{ fontFamily: p.fixed ? "'Bricolage Grotesque', sans-serif" : MOCK_WRONG.pollenSerif, fontWeight: 500, fontSize: 34 }}>pollen</span>
+          {p.fixed ? (
+            <ClientLogo slug="pollen" color={light} className="mock-logo" />
+          ) : (
+            <span style={{ fontFamily: MOCK_WRONG.pollenSerif, fontWeight: 500, fontSize: 34 }}>pollen</span>
+          )}
         </Spot>
         <Spot {...p} id="volume" label="le message">
           <span style={{ display: "block", fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 26, lineHeight: 1.15, fontWeight: 500 }}>

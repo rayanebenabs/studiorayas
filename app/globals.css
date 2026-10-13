@@ -2133,6 +2133,7 @@ html.is-scroll-locked {
 .charte__tile svg {
   width: 58%;
   height: auto;
+  max-height: 70%;
 }
 
 .charte__swatches {
@@ -2446,6 +2447,12 @@ html.is-scroll-locked {
 .mock-logo {
   width: 170px;
   height: auto;
+  display: block;
+}
+
+.mock-wordmark {
+  height: 30px;
+  width: auto;
   display: block;
 }
 
