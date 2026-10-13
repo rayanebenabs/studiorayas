@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
+import { gsap, ScrollTrigger, prefersReducedMotion, WHEEL_EFFORT, WHEEL_RESET } from "@/lib/gsap";
 import { BRAND_LINE, PHASES } from "@/content/site";
 import { TOTEM_PATHS, TOTEM_TRANSFORM, TOTEM_VIEWBOX } from "@/lib/totem";
 import { SiteHeader } from "../SiteHeader";
@@ -14,8 +14,6 @@ const RULES =
 const RULE_GAP = 250;
 const STEP_DURATION = 1.1; // secondes pour passer d'un service au suivant
 const HOLD = 0.45; // pause après chaque passage, le temps de lire avant le geste suivant
-const WHEEL_EFFORT = 180; // distance de molette à cumuler pour passer au service suivant (environ 2 crans)
-const WHEEL_RESET = 400; // millisecondes sans molette avant que l'effort cumulé ne retombe
 const SWIPE = 30; // pixels de glissé au doigt pour changer de service
 
 /**
