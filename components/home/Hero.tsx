@@ -16,7 +16,9 @@ const TOTEM_MASK = `url("data:image/svg+xml,${encodeURIComponent(
 )}")`;
 const STEP_DURATION = 1.1; // secondes pour passer d'un service au suivant
 const HOLD = 0.45; // pause après chaque passage, le temps de lire avant le geste suivant
-const SWIPE = 30; // pixels de glissé au doigt pour changer de service
+const DRAG = 0.45; // part de la hauteur d'écran que le doigt parcourt pour un service entier
+const FLICK = 0.5; // vitesse du doigt (px/ms) au-delà de laquelle un lancer passe au service suivant
+const WHEEL_PREVIEW = 0.35; // part du service que la molette fait avancer avant d'atteindre l'effort
 // Au doigt, le passage est plus vif : le défilement est déjà bloqué pendant l'animation, pas besoin d'une longue pause.
 const STEP_DURATION_TOUCH = 0.7;
 const HOLD_TOUCH = 0.15;
@@ -51,7 +53,7 @@ export function Hero() {
   }, []);
 
   // Amène le défilement sur un service, en douceur, puis marque une pause pour laisser lire.
-  const scrollToPhase = useCallback((i: number) => {
+  const scrollToPhase = useCallback((i: number, duration?: number) => {
     const st = trigger.current;
     if (!st) return;
     busy.current = true;
@@ -62,7 +64,7 @@ export function Hero() {
     travel.current?.kill();
     travel.current = gsap.to(window, {
       scrollTo: { y: st.start + ((st.end - st.start) * i) / LAST, autoKill: false },
-      duration: isTouch() ? STEP_DURATION_TOUCH : STEP_DURATION,
+      duration: duration ?? (isTouch() ? STEP_DURATION_TOUCH : STEP_DURATION),
       ease: "power2.inOut",
       onComplete: () => {
         travel.current = gsap.delayedCall(isTouch() ? HOLD_TOUCH : HOLD, () => {
@@ -133,7 +135,7 @@ export function Hero() {
         start: "top top",
         end: () => `+=${window.innerHeight * LAST * 0.9}`,
         pin: true,
-        scrub: isTouch() ? 0.25 : 0.5,
+        scrub: isTouch() ? 0.1 : 0.5,
         animation: tl.current,
         // Filet de sécurité (barre de défilement, élan d'un défilement venu d'en dessous) : on se pose sur un service.
         snap: { snapTo: 1 / LAST, inertia: false, delay: 0.25, duration: { min: 0.4, max: 0.9 }, ease: "power2.inOut" },
@@ -151,6 +153,11 @@ export function Hero() {
       };
       const targetFrom = (pos: number, dir: number) => (dir > 0 ? Math.floor(pos + 0.05) + 1 : Math.ceil(pos - 0.05) - 1);
       const inside = (t: number) => t >= 0 && t <= LAST;
+      const phaseY = (f: number) => {
+        const st = trigger.current!;
+        return st.start + ((st.end - st.start) * f) / LAST;
+      };
+      const clampPhase = (f: number) => Math.max(0, Math.min(LAST, f));
       // Renvoie vrai quand le hero garde le geste pour lui (le défilement natif est alors bloqué).
       const handle = (dir: number, advance = true) => {
         const pos = position();
@@ -166,6 +173,14 @@ export function Hero() {
       let effort = 0; // distance de molette cumulée vers le service suivant
       let afterStep = false; // on vient de changer de service : la traîne du geste ne compte pas
       let released = false; // l'effort de sortie est fourni : le défilement reprend la main
+      let wheelBase = 0; // service d'où part le geste de molette
+      let settle = 0;
+      let preview: gsap.core.Tween | null = null;
+      // La molette fait déjà bouger l'animation pendant qu'elle cumule l'effort ; sans suite, elle revient.
+      const follow = (f: number, duration: number) => {
+        preview?.kill();
+        preview = gsap.to(window, { scrollTo: { y: phaseY(f), autoKill: false }, duration, ease: "power2.out" });
+      };
       // Sur le dernier service, la molette doit aussi fournir son effort avant de quitter le hero.
       const atEnd = () => {
         const pos = position();
@@ -211,37 +226,80 @@ export function Hero() {
         if (busy.current) return;
         if (afterStep && tail) return;
         afterStep = false;
+        if (effort === 0) wheelBase = Math.round(position() ?? 0);
         effort += delta;
+        window.clearTimeout(settle);
         if (Math.abs(effort) >= WHEEL_EFFORT) {
           effort = 0;
           afterStep = true;
+          preview?.kill();
           handle(dir);
+          return;
         }
+        follow(clampPhase(wheelBase + (effort / WHEEL_EFFORT) * WHEEL_PREVIEW), 0.25);
+        settle = window.setTimeout(() => {
+          if (busy.current) return;
+          effort = 0;
+          follow(wheelBase, 0.35);
+        }, WHEEL_RESET);
       };
 
+      // Au doigt, l'animation suit le doigt dans les deux sens ; au lâcher, elle se pose sur un service.
       let startY = 0;
       let dir = 0;
       let held = false;
-      let stepped = false;
+      let base = 0; // position (en services) au moment où le doigt se pose
+      let lastY = 0;
+      let lastT = 0;
+      let speed = 0;
       const onTouchStart = (e: TouchEvent) => {
-        startY = e.touches[0].clientY;
+        startY = lastY = e.touches[0].clientY;
+        lastT = performance.now();
+        speed = 0;
         dir = 0;
         held = false;
-        stepped = false;
       };
       const onTouchMove = (e: TouchEvent) => {
-        const dy = startY - e.touches[0].clientY;
+        const y = e.touches[0].clientY;
+        const dy = startY - y;
         if (!dir) {
           if (!dy) return;
           dir = Math.sign(dy);
-          held = handle(dir, false);
+          const pos = position();
+          held = pos !== null && (busy.current || inside(targetFrom(pos, dir)));
+          if (!held || pos === null) return;
+          // Le doigt reprend la main, même au milieu d'un passage.
+          travel.current?.kill();
+          busy.current = false;
+          unhold();
+          base = pos;
         }
         if (!held) return;
         if (e.cancelable) e.preventDefault();
-        if (!stepped && !busy.current && Math.abs(dy) > SWIPE) {
-          stepped = true;
-          handle(dir);
-        }
+        const now = performance.now();
+        if (now > lastT) speed = (lastY - y) / (now - lastT);
+        lastY = y;
+        lastT = now;
+        // Un service à la fois : le doigt ne dépasse pas le service voisin de celui de départ.
+        const lo = Math.max(0, Math.ceil(base - 0.001) - 1);
+        const hi = Math.min(LAST, Math.floor(base + 0.001) + 1);
+        const f = Math.max(lo, Math.min(hi, base + dy / (window.innerHeight * DRAG)));
+        window.scrollTo({ top: phaseY(f), behavior: "instant" });
+      };
+      const onTouchEnd = () => {
+        if (!held) return;
+        held = false;
+        const pos = position();
+        if (pos === null) return;
+        if (performance.now() - lastT > 80) speed = 0; // le doigt s'était arrêté avant de se lever
+        const moved = pos - base;
+        const next = Math.floor(base + 0.001) + 1;
+        const prev = Math.ceil(base - 0.001) - 1;
+        let target = Math.round(pos);
+        if (Math.abs(speed) > FLICK) target = speed > 0 ? next : prev;
+        else if (Math.abs(moved) > 0.25) target = moved > 0 ? next : prev;
+        target = clampPhase(target);
+        scrollToPhase(target, Math.max(0.25, Math.abs(target - pos) * STEP_DURATION_TOUCH));
       };
 
       const onKey = (e: KeyboardEvent) => {
@@ -258,11 +316,19 @@ export function Hero() {
       window.addEventListener("wheel", onWheel, { passive: false });
       window.addEventListener("touchstart", onTouchStart, { passive: true });
       window.addEventListener("touchmove", onTouchMove, { passive: false });
+      window.addEventListener("touchend", onTouchEnd, { passive: true });
+      window.addEventListener("touchcancel", onTouchEnd, { passive: true });
       window.addEventListener("keydown", onKey);
       const cleanups = [
         () => window.removeEventListener("wheel", onWheel),
         () => window.removeEventListener("touchstart", onTouchStart),
         () => window.removeEventListener("touchmove", onTouchMove),
+        () => window.removeEventListener("touchend", onTouchEnd),
+        () => window.removeEventListener("touchcancel", onTouchEnd),
+        () => {
+          window.clearTimeout(settle);
+          preview?.kill();
+        },
         () => window.removeEventListener("keydown", onKey),
       ];
 
