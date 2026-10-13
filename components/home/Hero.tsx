@@ -9,14 +9,12 @@ import { SiteHeader } from "../SiteHeader";
 
 const STEP = 36; // degrés entre deux cartes : 10 cartes, chaque service apparaît deux fois sur la roue
 const LAST = PHASES.length - 1;
-const RULES =
-  "couleur.fond = craie · accent = terre, un par écran · rayon = 0 · ombre = aucune · dégradé = aucun · titre = Cormorant 300 · texte = Archivo · adresse = vous · ";
 // La silhouette du totem, en masque CSS (mêmes tracés que le contour).
 const TOTEM_MASK = `url("data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${TOTEM_VIEWBOX}"><g transform="${TOTEM_TRANSFORM}">${TOTEM_PATHS.map((d) => `<path d="${d}"/>`).join("")}</g></svg>`,
 )}")`;
-const RULE_LINES = 72; // lignes de règles : les 64 du totem, plus les 6 qu'elles parcourent pendant Brand OS
-// Six lignes (1 500 unités) sur la hauteur du bandeau de règles (110 + 72 x 250 = 18 110 unités), en %.
+// Les règles du totem sont une image (public/totem-rules.png, scripts/totem-rules.mjs) : 72 lignes, 18 110 unités
+// de haut. Pendant Brand OS, elles glissent de six lignes (1 500 unités), en % de leur hauteur.
 const RULE_TRAVEL = (1500 / 18110) * 100;
 const SPAN = 0.8; // hauteur d'écran de défilement par service
 const STEP_DURATION = 0.9; // secondes pour aller d'un service au suivant (flèches, calage)
@@ -255,7 +253,6 @@ export function Hero() {
   const p = PHASES[phase];
   const dark = phase === LAST;
   const wheelCards = Array.from({ length: 10 }, (_, k) => PHASES[k % PHASES.length]);
-  const lines = Array.from({ length: RULE_LINES }, (_, i) => i);
 
   return (
     <section ref={root} className="hero" data-dark={dark} id="top" aria-label="Studio Rayas, studio de marque">
@@ -285,11 +282,7 @@ export function Hero() {
             passe par des transformations, gérées par la carte graphique, sans recalcul de mise en page. */}
         <div className="hero__matter" style={{ ["--totem-mask" as string]: TOTEM_MASK }} aria-hidden="true">
           <div ref={rules} className="hero__rules" style={{ opacity: 0 }}>
-            <div ref={ticker} className="hero__ticker">
-              {lines.map((i) => (
-                <p key={i}>{RULES.repeat(2)}</p>
-              ))}
-            </div>
+            <div ref={ticker} className="hero__ticker" />
           </div>
           {["encre", "terre", "craie"].map((c, i) => (
             <div
