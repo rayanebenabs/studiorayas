@@ -2698,3 +2698,109 @@ html.is-scroll-locked {
     text-align: center;
   }
 }
+
+/* L'exemple pas à pas du guide : avant/après, prompts, capture de la galerie. */
+
+.guide-toc__sub {
+  display: block;
+  padding-left: var(--sr-space-8);
+  margin-top: var(--sr-space-1);
+}
+
+.guide-example {
+  gap: var(--sr-space-6);
+}
+
+.guide-example__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: ex;
+  display: grid;
+  gap: var(--sr-space-12);
+}
+
+.guide-example__steps > li {
+  counter-increment: ex;
+  display: grid;
+  gap: var(--sr-space-4);
+  padding-top: var(--sr-space-4);
+  border-top: var(--sr-border-width-default) solid var(--sr-color-text);
+}
+
+.guide-example__steps h3 {
+  font-family: var(--sr-font-display);
+  font-size: var(--sr-text-2xl);
+  line-height: var(--sr-leading-snug);
+}
+
+.guide-example__steps h3::before {
+  content: counter(ex, decimal-leading-zero) " ";
+  color: var(--sr-color-accent);
+  font-family: var(--sr-font-body);
+  font-size: var(--sr-text-sm);
+  vertical-align: middle;
+  margin-right: var(--sr-space-2);
+}
+
+.guide-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sr-space-4);
+}
+
+.guide-compare figure,
+.guide-shot {
+  margin: 0;
+  display: grid;
+  gap: var(--sr-space-2);
+}
+
+.guide-compare img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: var(--sr-color-surface-2);
+}
+
+.guide-compare figcaption {
+  font-size: var(--sr-text-xs);
+  color: var(--sr-color-text-muted);
+}
+
+.guide-shot img {
+  width: 100%;
+  border: var(--sr-border-width-default) solid var(--sr-color-border);
+}
+
+.guide-prompt {
+  margin: 0;
+  border: var(--sr-border-width-default) solid var(--sr-color-border);
+  background: var(--sr-color-surface);
+}
+
+.guide-prompt__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sr-space-4);
+  padding: var(--sr-space-3) var(--sr-space-4);
+  border-bottom: var(--sr-border-width-default) solid var(--sr-color-border);
+}
+
+.guide-prompt__text {
+  margin: 0;
+  padding: var(--sr-space-4);
+  max-height: 22rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-family: var(--sr-font-body);
+  font-size: var(--sr-text-sm);
+  line-height: var(--sr-leading-normal);
+}
+
+@media (max-width: 600px) {
+  .guide-compare {
+    gap: var(--sr-space-2);
+  }
+}

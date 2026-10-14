@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ButtonLink } from "@/components/brand";
-import { GUIDE, INSTAGRAM_URL, OUTRO, PARTS, SAFEGUARDS, TIKTOK_URL, type GuidePoint } from "@/content/guide-ia";
+import { EXAMPLE, GUIDE, INSTAGRAM_URL, OUTRO, PARTS, SAFEGUARDS, TIKTOK_URL, type GuidePoint } from "@/content/guide-ia";
+import { PromptBlock } from "@/components/guide/PromptBlock";
 
 // Page non répertoriée : absente des menus et du plan du site, fermée aux moteurs. Seul le lien partagé y mène.
 export const metadata: Metadata = {
@@ -13,6 +15,57 @@ export const metadata: Metadata = {
 };
 
 const num = (i: number) => String(i + 1).padStart(2, "0");
+
+// L'exemple s'insère après la partie « Rendre un photoshoot pro ».
+const EXAMPLE_AFTER = "photoshoot";
+
+function Example() {
+  const { ai, code, result } = EXAMPLE;
+  return (
+    <section id={EXAMPLE.id} className="guide-part guide-example">
+      <p className="sr-eyebrow">{EXAMPLE.eyebrow}</p>
+      <h2 className="title-md">{EXAMPLE.title}</h2>
+      <p className="guide-part__intro">{EXAMPLE.intro}</p>
+
+      <ol className="guide-example__steps">
+        <li>
+          <h3>{EXAMPLE.shoot.title}</h3>
+          <p>{EXAMPLE.shoot.text}</p>
+        </li>
+        <li>
+          <h3>{ai.title}</h3>
+          <p>{ai.text}</p>
+          <div className="guide-compare">
+            {[ai.before, ai.after].map((img) => (
+              <figure key={img.src}>
+                <img src={img.src} alt={img.alt} loading="lazy" />
+                <figcaption>{img.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <PromptBlock label="Le prompt ChatGPT" text={ai.prompt} />
+        </li>
+        <li>
+          <h3>{code.title}</h3>
+          <p>{code.text}</p>
+          <PromptBlock label="Le prompt Claude Code" text={code.prompt} />
+        </li>
+        <li>
+          <h3>{result.title}</h3>
+          <p>{result.text}</p>
+          <figure className="guide-shot">
+            <img src={result.image.src} alt={result.image.alt} loading="lazy" />
+          </figure>
+          <div>
+            <Link href={result.href} className="sr-btn sr-btn--primary sr-btn--lg">
+              {result.cta}
+            </Link>
+          </div>
+        </li>
+      </ol>
+    </section>
+  );
+}
 
 function Points({ items }: { items: GuidePoint[] }) {
   return (
@@ -45,6 +98,9 @@ export default function GuidePage() {
             {PARTS.map((p, i) => (
               <li key={p.id}>
                 <a href={`#${p.id}`}><span>{num(i)}</span> {p.title}</a>
+                {p.id === EXAMPLE_AFTER && (
+                  <a href={`#${EXAMPLE.id}`} className="guide-toc__sub">Exemple : {EXAMPLE.title.toLowerCase()}</a>
+                )}
               </li>
             ))}
             <li><a href="#garde-fous">Garde-fous</a></li>
@@ -68,13 +124,16 @@ export default function GuidePage() {
           </section>
 
           {PARTS.map((p, i) => (
-            <section key={p.id} id={p.id} className="guide-part">
+            <Fragment key={p.id}>
+            <section id={p.id} className="guide-part">
               <p className="guide-part__num">{num(i)}</p>
               <h2 className="title-md">{p.title}</h2>
               <p className="guide-part__intro">{p.intro}</p>
               <Points items={p.points} />
               {p.note && <p className="guide-note">{p.note}</p>}
             </section>
+            {p.id === EXAMPLE_AFTER && <Example />}
+            </Fragment>
           ))}
 
           <section id="garde-fous" className="guide-part">

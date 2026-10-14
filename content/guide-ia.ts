@@ -173,3 +173,64 @@ export const OUTRO = {
   social: "Sur @studiorayas (Instagram et TikTok), je partage chaque semaine des idées pour stimuler ta créativité, des coulisses de projets et des façons concrètes de faire de l'IA une alliée plutôt qu'une menace.",
   share: "Si ce guide t'a été utile, transmets-le à un ami artiste qui en a besoin, et viens me raconter ce que tu as testé.",
 };
+
+// Exemple pas à pas, placé après la partie 2 : de la photo d'atelier à la galerie en ligne.
+export const EXAMPLE = {
+  id: "exemple",
+  eyebrow: "Exemple concret",
+  title: "De la photo d'atelier à la galerie en ligne",
+  intro: "Voici le process complet que j'ai suivi pour exposer ma série « 20 semaines pour stimuler ma créativité » sur mon site.",
+  shoot: {
+    title: "Photographier chaque cadre",
+    text: "J'ai pris l'ensemble des œuvres de la série et j'ai photographié chaque cadre au mur, avec mon appareil. Un téléphone suffit.",
+  },
+  ai: {
+    title: "Le photoshoot, par l'IA",
+    text: "J'ai envoyé chaque photo à ChatGPT avec le prompt ci-dessous. Résultat : une photo digne d'un catalogue, sur fond blanc, sans toucher à l'œuvre.",
+    before: { src: "/guide/photoshoot-avant.jpg", label: "Avant · la photo prise au mur", alt: "Photo du tableau encadré au mur, prise de face avec un appareil, un autre cadre visible au-dessus" },
+    after: { src: "/guide/photoshoot-apres.webp", label: "Après · la photo de studio", alt: "Le même tableau encadré, isolé sur un fond blanc de galerie, avec une ombre légère" },
+    prompt: `Rôle : Tu es un photographe d'art et d'exposition professionnel.
+
+Tâche : À partir de l'image de la peinture encadrée fournie en pièce jointe, génère une photographie de studio haute résolution de cette même œuvre, en conservant le tableau et son cadre d'origine exactement tels qu'ils apparaissent, mais isolés sur un fond blanc neutre.
+
+Directives de génération :
+
+• Fidélité absolue (Œuvre & Cadre) : Conserve très précisément le tableau ET le cadre existant de la photo d'origine (couleurs, formes, texture, patine, et épaisseur du cadre d'origine, ainsi que l'œuvre elle-même). Ne modifie, n'ajoute et ne retire aucun de ces éléments.
+
+• Support invisible : Le tableau et son cadre sont fixés à plat contre le mur. Aucun câble, rail, crochet, clou, ou fil d'attache ne doit être visible.
+
+• Environnement (Minimaliste) : Place cette œuvre (peinture + son cadre d'origine) seule au centre de l'image, sur un mur blanc de galerie d'art propre et uni, de face. Il n'y a aucun sol, meuble, plinthe, ou autre élément visible autour.
+
+• Prise de vue : Une photo prise strictement de face (vue frontale, parfaitement droite et alignée), sans perspective inclinée, de manière à avoir une reproduction digne d'un catalogue ou d'une galerie d'art.
+
+• Éclairage : Éclairage de studio naturel, doux et homogène, sans reflets sur le verre ou la toile, projetant une infime et subtile ombre naturelle à l'arrière du cadre sur le mur blanc pour lui donner du relief et de la présence.`,
+  },
+  code: {
+    title: "La galerie, avec Claude Code",
+    text: "J'ai ensuite demandé à Claude Code de construire une galerie d'art interactive pour exposer les œuvres en ligne. Voici le prompt.",
+    prompt: `Crée une page /galerie/ sur mon site : une galerie d'art en 3D qu'on parcourt comme dans un jeu vidéo, pour exposer ma série « 20 semaines pour stimuler ma créativité ».
+
+• La salle : une pièce d'exposition en Three.js, dans les couleurs et les règles de ma marque (voir le Brand OS du projet). Murs clairs, angles droits, éclairage doux, rien de décoratif.
+
+• Les œuvres : les 20 photos de studio du dossier public/galerie/, recadrées au ras du cadre. Accroche-les dans l'ordre de publication : mur de gauche, mur du fond, puis mur de droite. Donne à chaque tableau l'épaisseur de son cadre et une ombre légère sur le mur. Si j'ajoute des œuvres, la salle s'agrandit toute seule.
+
+• Les contrôles : ZQSD, WASD ou flèches pour marcher, souris pour regarder, clic sur une œuvre pour s'approcher, Échap pour faire une pause. Sur téléphone, un joystick à gauche pour marcher et le pouce droit pour regarder.
+
+• Les cartels : à côté de chaque œuvre, son titre, son année et sa technique. Quand on s'approche, une fiche s'ouvre avec l'histoire de l'œuvre et le lien vers sa publication Instagram. Les flèches passent à l'œuvre suivante.
+
+• L'entrée : une pancarte qui présente la série, et un compteur d'œuvres vues.
+
+• Le contenu : toutes les infos des œuvres dans un seul fichier, facile à compléter sans toucher au code.
+
+• L'accessibilité : une version en liste pour qui ne veut pas de 3D, et le mouvement réduit respecté.
+
+Vérifie le rendu sur ordinateur et sur téléphone avant de me rendre la main.`,
+  },
+  result: {
+    title: "Le résultat",
+    text: "Une salle à parcourir comme dans un jeu, avec les vingt œuvres accrochées dans l'ordre de leur publication.",
+    image: { src: "/guide/galerie.jpg", alt: "La galerie en 3D : une salle blanche, les tableaux accrochés sur les murs, la pancarte de la série au premier plan" },
+    cta: "Entrer dans la galerie",
+    href: "/galerie/",
+  },
+};
