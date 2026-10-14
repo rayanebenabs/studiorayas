@@ -2701,11 +2701,6 @@ html.is-scroll-locked {
 
 /* L'exemple pas à pas du guide : avant/après, prompts, capture de la galerie. */
 
-.guide-toc__sub {
-  display: block;
-  padding-left: var(--sr-space-8);
-  margin-top: var(--sr-space-1);
-}
 
 .guide-example {
   gap: var(--sr-space-6);

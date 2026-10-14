@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Fragment } from "react";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -15,9 +14,6 @@ export const metadata: Metadata = {
 };
 
 const num = (i: number) => String(i + 1).padStart(2, "0");
-
-// L'exemple s'insère après la partie « Rendre un photoshoot pro ».
-const EXAMPLE_AFTER = "photoshoot";
 
 function Example() {
   const { ai, code, result } = EXAMPLE;
@@ -94,13 +90,11 @@ export default function GuidePage() {
         <nav className="guide-toc" aria-label="Sommaire du guide">
           <p className="sr-eyebrow">Sommaire</p>
           <ol>
+            <li><a href={`#${EXAMPLE.id}`}>Exemple : {EXAMPLE.title.toLowerCase()}</a></li>
             <li><a href="#avant">Avant de commencer</a></li>
             {PARTS.map((p, i) => (
               <li key={p.id}>
                 <a href={`#${p.id}`}><span>{num(i)}</span> {p.title}</a>
-                {p.id === EXAMPLE_AFTER && (
-                  <a href={`#${EXAMPLE.id}`} className="guide-toc__sub">Exemple : {EXAMPLE.title.toLowerCase()}</a>
-                )}
               </li>
             ))}
             <li><a href="#garde-fous">Garde-fous</a></li>
@@ -109,6 +103,8 @@ export default function GuidePage() {
         </nav>
 
         <article className="guide-body">
+          <Example />
+
           <section id="avant" className="guide-part">
             <h2 className="title-md">Avant de commencer</h2>
             <p>{GUIDE.intro[1]}</p>
@@ -124,16 +120,13 @@ export default function GuidePage() {
           </section>
 
           {PARTS.map((p, i) => (
-            <Fragment key={p.id}>
-            <section id={p.id} className="guide-part">
+            <section key={p.id} id={p.id} className="guide-part">
               <p className="guide-part__num">{num(i)}</p>
               <h2 className="title-md">{p.title}</h2>
               <p className="guide-part__intro">{p.intro}</p>
               <Points items={p.points} />
               {p.note && <p className="guide-note">{p.note}</p>}
             </section>
-            {p.id === EXAMPLE_AFTER && <Example />}
-            </Fragment>
           ))}
 
           <section id="garde-fous" className="guide-part">

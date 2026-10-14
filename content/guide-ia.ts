@@ -174,7 +174,7 @@ export const OUTRO = {
   share: "Si ce guide t'a été utile, transmets-le à un ami artiste qui en a besoin, et viens me raconter ce que tu as testé.",
 };
 
-// Exemple pas à pas, placé après la partie 2 : de la photo d'atelier à la galerie en ligne.
+// Exemple pas à pas, en tête du guide : de la photo d'atelier à la galerie en ligne.
 export const EXAMPLE = {
   id: "exemple",
   eyebrow: "Exemple concret",
@@ -207,24 +207,24 @@ Directives de génération :
   },
   code: {
     title: "La galerie, avec Claude Code",
-    text: "J'ai ensuite demandé à Claude Code de construire une galerie d'art interactive pour exposer les œuvres en ligne. Voici le prompt.",
-    prompt: `Crée une page /galerie/ sur mon site : une galerie d'art en 3D qu'on parcourt comme dans un jeu vidéo, pour exposer ma série « 20 semaines pour stimuler ma créativité ».
+    text: "J'ai ensuite demandé à Claude Code de construire une galerie d'art interactive pour exposer les œuvres en ligne. Le prompt ci-dessous marche pour n'importe quelle série : remplace ce qui est entre crochets.",
+    prompt: `Crée une galerie d'art en ligne en 3D, qu'on parcourt comme dans un jeu vidéo, pour exposer ma série « [nom de ta série] ». Si j'ai déjà un site, ajoute-la comme une nouvelle page. Sinon, crée un petit site prêt à mettre en ligne.
 
-• La salle : une pièce d'exposition en Three.js, dans les couleurs et les règles de ma marque (voir le Brand OS du projet). Murs clairs, angles droits, éclairage doux, rien de décoratif.
+• Les œuvres : mes photos sont dans le dossier [chemin du dossier]. Ce sont des photos de studio, chaque œuvre dans son cadre sur fond blanc. Recadre-les au ras du cadre, puis accroche-les dans l'ordre de leur nom de fichier : mur de gauche, mur du fond, puis mur de droite. Donne à chaque tableau l'épaisseur de son cadre et une ombre légère sur le mur. Si j'ajoute des œuvres, la salle s'agrandit toute seule.
 
-• Les œuvres : les 20 photos de studio du dossier public/galerie/, recadrées au ras du cadre. Accroche-les dans l'ordre de publication : mur de gauche, mur du fond, puis mur de droite. Donne à chaque tableau l'épaisseur de son cadre et une ombre légère sur le mur. Si j'ajoute des œuvres, la salle s'agrandit toute seule.
+• La salle : une pièce d'exposition sobre, murs clairs, éclairage doux, rien de décoratif. Les œuvres doivent rester les seules couleurs fortes. Si mon site a déjà une charte (couleurs, typos), reprends-la.
 
 • Les contrôles : ZQSD, WASD ou flèches pour marcher, souris pour regarder, clic sur une œuvre pour s'approcher, Échap pour faire une pause. Sur téléphone, un joystick à gauche pour marcher et le pouce droit pour regarder.
 
-• Les cartels : à côté de chaque œuvre, son titre, son année et sa technique. Quand on s'approche, une fiche s'ouvre avec l'histoire de l'œuvre et le lien vers sa publication Instagram. Les flèches passent à l'œuvre suivante.
+• Les cartels : à côté de chaque œuvre, son titre, son année et sa technique. Quand on s'approche, une fiche s'ouvre avec l'histoire de l'œuvre et, s'il existe, un lien vers sa publication sur les réseaux. Les flèches passent à l'œuvre suivante.
 
 • L'entrée : une pancarte qui présente la série, et un compteur d'œuvres vues.
 
-• Le contenu : toutes les infos des œuvres dans un seul fichier, facile à compléter sans toucher au code.
+• Le contenu : toutes les infos des œuvres dans un seul fichier, facile à compléter sans toucher au code. Pré-remplis-le avec un titre par œuvre, et laisse-moi les textes à écrire.
 
 • L'accessibilité : une version en liste pour qui ne veut pas de 3D, et le mouvement réduit respecté.
 
-Vérifie le rendu sur ordinateur et sur téléphone avant de me rendre la main.`,
+Avant de commencer, pose-moi les questions qui te manquent. À la fin, vérifie le rendu sur ordinateur et sur téléphone, et explique-moi comment ajouter une œuvre et mettre le site en ligne.`,
   },
   result: {
     title: "Le résultat",
