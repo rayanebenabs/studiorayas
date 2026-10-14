@@ -224,6 +224,12 @@ export const CLIENTS: Client[] = [
 
 export const getClient = (slug: string) => CLIENTS.find((c) => c.slug === slug);
 
+/** Projets pas encore sortis : ni sur l'accueil, ni en page de cas. Retirez un slug le jour de sa sortie. */
+export const UNRELEASED: ClientSlug[] = ["slayyy", "inavoue"];
+
+/** Les cas montrés sur le site, dans l'ordre de CLIENTS. */
+export const PUBLISHED_CLIENTS = CLIENTS.filter((c) => !UNRELEASED.includes(c.slug));
+
 /** Les écarts glissés dans les maquettes du brand-check : des valeurs volontairement hors marque. */
 export const MOCK_WRONG = {
   slayyyRed: "#A22A3E",

@@ -8,7 +8,7 @@ import "@fontsource/hanken-grotesk/700.css";
 import "@fontsource/bricolage-grotesque/400.css";
 import "@fontsource/bricolage-grotesque/500.css";
 import "@fontsource/caveat/400.css";
-import { CLIENTS, getClient } from "@/content/clients";
+import { PUBLISHED_CLIENTS } from "@/content/clients";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -21,22 +21,22 @@ import { BrandCheckGame } from "@/components/case/BrandCheckGame";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return CLIENTS.map((c) => ({ slug: c.slug }));
+  return PUBLISHED_CLIENTS.map((c) => ({ slug: c.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const c = getClient(slug);
+  const c = PUBLISHED_CLIENTS.find((x) => x.slug === slug);
   if (!c) return {};
   return { title: `${c.name} · Studio Rayas`, description: `${c.name} : ${c.sector}. Branding, charte graphique et Brand OS par Studio Rayas.` };
 }
 
 export default async function CasePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const client = getClient(slug);
+  const client = PUBLISHED_CLIENTS.find((x) => x.slug === slug);
   if (!client) notFound();
-  const i = CLIENTS.findIndex((c) => c.slug === client.slug);
-  const next = CLIENTS[(i + 1) % CLIENTS.length];
+  const i = PUBLISHED_CLIENTS.findIndex((c) => c.slug === client.slug);
+  const next = PUBLISHED_CLIENTS[(i + 1) % PUBLISHED_CLIENTS.length];
 
   return (
     <main>
