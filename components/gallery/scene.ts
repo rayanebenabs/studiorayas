@@ -3,7 +3,7 @@ import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import { gsap } from "gsap";
 import { tokens } from "@/brand/build/tokens.js";
 import { TOTEM_PATHS, TOTEM_TRANSFORM, TOTEM_VIEWBOX } from "@/lib/totem";
-import type { Artwork } from "@/content/gallery";
+import { SERIES, type Artwork } from "@/content/gallery";
 
 /** La salle d'exposition : une pièce à plat, couleurs de la marque, le totem Rayas en terre au centre. */
 
@@ -104,7 +104,9 @@ function cartelTexture(a: Artwork, i: number) {
     ctx.font = '400 24px "Archivo"';
     ctx.fillStyle = P.cendre;
     const meta = [a.year, a.technique].filter(Boolean).join(" · ");
-    ctx.fillText(a.src ? meta : "Bientôt accrochée", 48, 150 + lines.length * 58 + 26);
+    wrapText(ctx, a.src ? meta : "Bientôt accrochée", 544)
+      .slice(0, 2)
+      .forEach((l, k) => ctx.fillText(l, 48, 150 + lines.length * 58 + 26 + k * 32));
     ctx.fillText("Rayane Benabdeljalil", 48, 352);
   });
 }
@@ -116,6 +118,72 @@ function blankTexture() {
     ctx.strokeStyle = P.sable;
     ctx.lineWidth = 2;
     ctx.strokeRect(28, 28, 344, 444);
+  });
+}
+
+/** La couleur moyenne du bord de la photo : le bois du cadre, reporté sur ses tranches. */
+function edgeColor(img: CanvasImageSource) {
+  const c = document.createElement("canvas");
+  c.width = c.height = 32;
+  const ctx = c.getContext("2d", { willReadFrequently: true })!;
+  ctx.drawImage(img, 0, 0, 32, 32);
+  const d = ctx.getImageData(0, 0, 32, 32).data;
+  let r = 0, g = 0, b = 0, n = 0;
+  for (let y = 0; y < 32; y++) {
+    for (let x = 0; x < 32; x++) {
+      if (x > 0 && x < 31 && y > 0 && y < 31) continue;
+      const i = (y * 32 + x) * 4;
+      r += d[i];
+      g += d[i + 1];
+      b += d[i + 2];
+      n++;
+    }
+  }
+  return new THREE.Color().setRGB(r / n / 255, g / n / 255, b / n / 255, THREE.SRGBColorSpace);
+}
+
+/** L'ombre douce que le cadre pose sur le mur : c'est elle qui le décolle. */
+function shadowTexture() {
+  return canvasTexture(256, 320, (ctx) => {
+    ctx.filter = "blur(14px)";
+    ctx.fillStyle = P.encre;
+    ctx.globalAlpha = 0.4;
+    ctx.fillRect(40, 40, 176, 240);
+  });
+}
+
+/** La pancarte de l'entrée : ce que raconte la série, lisible depuis le seuil. */
+function signTexture() {
+  return canvasTexture(1000, 1330, (ctx) => {
+    ctx.fillStyle = P.blanc;
+    ctx.fillRect(0, 0, 1000, 1330);
+    ctx.fillStyle = P.terre;
+    ctx.fillRect(80, 104, 56, 5);
+    ctx.fillStyle = P.encre;
+    ctx.font = '500 28px "Archivo"';
+    ctx.letterSpacing = "5px";
+    ctx.fillText(SERIES.eyebrow.toUpperCase(), 156, 116);
+    ctx.letterSpacing = "0px";
+    ctx.font = '300 100px "Cormorant Garamond"';
+    let y = 270;
+    for (const l of wrapText(ctx, SERIES.title, 840)) {
+      ctx.fillText(l, 80, y);
+      y += 102;
+    }
+    ctx.fillRect(80, y - 20, 840, 2);
+    y += 60;
+    ctx.font = '400 39px "Archivo"';
+    SERIES.body.forEach((para, k) => {
+      ctx.fillStyle = k === SERIES.body.length - 1 ? P.cendre : P.encre;
+      for (const l of wrapText(ctx, para, 840)) {
+        ctx.fillText(l, 80, y);
+        y += 56;
+      }
+      y += 34;
+    });
+    ctx.fillStyle = P.encre;
+    ctx.font = '500 26px "Archivo"';
+    ctx.fillText("Rayane Benabdeljalil", 80, 1250);
   });
 }
 
@@ -215,6 +283,25 @@ export function createGallery(canvas: HTMLCanvasElement, artworks: Artwork[], cb
     colliders.push({ minX: x - 0.25, maxX: x + 0.25, minZ: -1.1, maxZ: 1.1 });
   });
 
+  // La pancarte, sur pied, un peu à droite de l'entrée et tournée vers le visiteur qui arrive.
+  const sign = new THREE.Group();
+  sign.position.set(1.1, 0, view.z - 3.4);
+  sign.lookAt(view.x, 0, view.z);
+  const board = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.463, 0.04), [
+    ...Array(4).fill(mat(P.blanc)),
+    new THREE.MeshBasicMaterial({ map: signTexture() }),
+    mat(P.blanc),
+  ]);
+  board.position.y = 1.44;
+  sign.add(board);
+  [-0.42, 0.42].forEach((x) => {
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.72, 0.03), ink);
+    leg.position.set(x, 0.36, -0.03);
+    sign.add(leg);
+  });
+  scene.add(sign);
+  colliders.push({ minX: sign.position.x - 0.55, maxX: sign.position.x + 0.55, minZ: sign.position.z - 0.25, maxZ: sign.position.z + 0.25 });
+
   const titleTex = wallTitle();
   const title = new THREE.Mesh(new THREE.PlaneGeometry(4.8, 0.78), new THREE.MeshBasicMaterial({ map: titleTex }));
   title.position.set(0, 3.45, -depth / 2 + 0.01);
@@ -224,7 +311,11 @@ export function createGallery(canvas: HTMLCanvasElement, artworks: Artwork[], cb
   const targets: THREE.Object3D[] = [];
   const centers: { pos: THREE.Vector3; normal: THREE.Vector3; h: number }[] = [];
   const loader = new THREE.TextureLoader();
-  const frameMat = flat(P.encre);
+  // Chaque photo montre l'œuvre dans son cadre : on lui donne l'épaisseur du cadre,
+  // décollée du mur, avec l'ombre douce qu'elle y pose.
+  const DEPTH = 0.05; // épaisseur du cadre
+  const GAP = 0.015; // jour entre le dos du cadre et le mur
+  const shadowTex = shadowTexture();
 
   artworks.forEach((a, i) => {
     const { pos, normal } = slots[i];
@@ -234,14 +325,20 @@ export function createGallery(canvas: HTMLCanvasElement, artworks: Artwork[], cb
     scene.add(group);
 
     const size = a.size ?? 1.8;
-    const art = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-    art.position.z = 0.032;
+    // Les tranches prennent la lumière (Lambert), la face garde les couleurs exactes de la photo.
+    const sideMat = new THREE.MeshLambertMaterial({ color: new THREE.Color(P.sable) });
+    const faceMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const art = new THREE.Mesh(new THREE.BoxGeometry(1, 1, DEPTH), [sideMat, sideMat, sideMat, sideMat, faceMat, sideMat]);
+    art.position.z = GAP + DEPTH / 2;
     art.userData.index = i;
-    const frame = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 0.05), frameMat);
-    frame.position.z = 0.005;
-    frame.userData.index = i;
-    group.add(frame, art);
-    targets.push(art, frame);
+    // Lumière venue d'en haut à droite : l'ombre tombe un peu en bas à gauche.
+    const shadow = new THREE.Mesh(
+      new THREE.PlaneGeometry(1, 1),
+      new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false }),
+    );
+    shadow.position.set(-0.025, -0.05, 0.002);
+    group.add(shadow, art);
+    targets.push(art);
 
     const cartel = new THREE.Mesh(new THREE.PlaneGeometry(0.48, 0.3), new THREE.MeshBasicMaterial({ map: cartelTexture(a, i) }));
     cartel.userData.index = i;
@@ -255,7 +352,8 @@ export function createGallery(canvas: HTMLCanvasElement, artworks: Artwork[], cb
       const w = aspect >= 1 ? size : size * aspect;
       const h = aspect >= 1 ? size / aspect : size;
       art.scale.set(w, h, 1);
-      frame.scale.set(w + 0.06, h + 0.06, 1);
+      // le flou du canevas déborde du rectangle : la texture est 256×320 pour un rectangle de 176×240
+      shadow.scale.set((w * 256) / 176, (h * 320) / 240, 1);
       cartel.position.set(w / 2 + 0.45, 1.25 - HANG, 0.012);
       center.h = h;
     };
@@ -265,14 +363,14 @@ export function createGallery(canvas: HTMLCanvasElement, artworks: Artwork[], cb
       loader.load(a.src, (tex) => {
         tex.colorSpace = THREE.SRGBColorSpace;
         tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-        const m = art.material as THREE.MeshBasicMaterial;
-        m.map = tex;
-        m.needsUpdate = true;
-        const img = tex.image as { width: number; height: number };
+        faceMat.map = tex;
+        faceMat.needsUpdate = true;
+        const img = tex.image as HTMLImageElement;
+        sideMat.color.copy(edgeColor(img));
         fit(img.width / img.height);
       });
     } else {
-      (art.material as THREE.MeshBasicMaterial).map = blankTexture();
+      faceMat.map = blankTexture();
       fit(4 / 5);
     }
   });

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type PointerEvent as RPointerEvent } from "react";
 import { prefersReducedMotion } from "@/lib/gsap";
-import { ARTWORKS } from "@/content/gallery";
+import { ARTWORKS, SERIES } from "@/content/gallery";
 import type { GalleryHandle } from "./scene";
 
 type Phase = "loading" | "intro" | "walk" | "pause" | "focus" | "no3d";
@@ -238,8 +238,8 @@ export function Gallery() {
                 des commandes.
               </h1>
               <p className="muted" style={{ marginTop: "var(--sr-space-4)" }}>
-                Les travaux personnels de Rayane Benabdeljalil, publiés sur Instagram et accrochés dans une salle. Vous la parcourez comme
-                dans un jeu.
+                Vingt semaines, vingt techniques. Les travaux personnels de Rayane Benabdeljalil, publiés sur Instagram et accrochés dans
+                une salle. Vous la parcourez comme dans un jeu.
               </p>
               {phase === "no3d" ? (
                 <p style={{ marginTop: "var(--sr-space-6)" }}>Votre navigateur n&apos;affiche pas la 3D. Les œuvres sont listées plus bas.</p>
@@ -336,7 +336,7 @@ export function Gallery() {
         {phase === "focus" && art && focus !== null && (
           <aside className="gallery__panel" aria-live="polite">
             <p className="sr-eyebrow">
-              {String(focus + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+              Épisode {String(focus + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </p>
             <h2 className="title-md" style={{ marginTop: "var(--sr-space-2)" }}>
               {art.title}
@@ -344,6 +344,7 @@ export function Gallery() {
             <p className="muted" style={{ marginTop: "var(--sr-space-1)" }}>
               {art.src ? [art.year, art.technique].filter(Boolean).join(" · ") : "Bientôt accrochée"}
             </p>
+            {art.note && <p style={{ marginTop: "var(--sr-space-4)" }}>{art.note}</p>}
             {art.instagram && (
               <a className="gallery__ig" href={art.instagram} target="_blank" rel="noreferrer">
                 Voir la publication sur Instagram
@@ -370,6 +371,17 @@ export function Gallery() {
           <h2 id="oeuvres-t" className="title-lg" style={{ marginTop: "var(--sr-space-4)" }}>
             Les œuvres de la salle.
           </h2>
+          <div className="gallery-series">
+            <p className="title-md">{SERIES.title}</p>
+            {SERIES.body.slice(0, 2).map((p) => (
+              <p key={p} className="muted">
+                {p}
+              </p>
+            ))}
+            <a href={SERIES.instagram} target="_blank" rel="noreferrer">
+              Voir l&apos;épisode 0 sur Instagram
+            </a>
+          </div>
           <ol className="gallery-list">
             {ARTWORKS.map((a, i) => (
               <li key={i}>
@@ -377,6 +389,7 @@ export function Gallery() {
                 <p className="gallery-list__n">{String(i + 1).padStart(2, "0")}</p>
                 <p className="gallery-list__title">{a.title}</p>
                 <p className="muted">{a.src ? [a.year, a.technique].filter(Boolean).join(" · ") : "Bientôt accrochée"}</p>
+                {a.note && <p className="gallery-list__note">{a.note}</p>}
                 {a.instagram && (
                   <a href={a.instagram} target="_blank" rel="noreferrer">
                     Instagram

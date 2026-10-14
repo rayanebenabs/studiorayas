@@ -1866,16 +1866,36 @@ html.is-scroll-locked {
   gap: var(--sr-space-8) var(--sr-space-6);
 }
 
+/* Les photos montrent l'œuvre dans son cadre : on la montre entière, sans recadrer. */
 .gallery-list__media {
-  aspect-ratio: 4 / 5;
-  background: var(--sr-color-surface-2);
+  aspect-ratio: 5 / 7;
   overflow: hidden;
 }
 
 .gallery-list__media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+}
+
+.gallery-list__note {
+  margin-top: var(--sr-space-2);
+  font-size: var(--sr-text-sm);
+}
+
+.gallery-series {
+  display: grid;
+  gap: var(--sr-space-3);
+  max-width: 40rem;
+  margin-top: var(--sr-space-8);
+  padding-top: var(--sr-space-6);
+  border-top: 1px solid var(--sr-color-border);
+}
+
+.gallery-series a {
+  font-size: var(--sr-text-sm);
+  color: var(--sr-color-accent);
+  text-underline-offset: 0.3em;
 }
 
 .gallery-list__n {
