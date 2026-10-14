@@ -2508,3 +2508,193 @@ html.is-scroll-locked {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ---------- Guide « L'IA au service des artistes » (page non répertoriée) ---------- */
+
+.guide-hero {
+  padding-top: clamp(140px, 18vw, 220px);
+  padding-bottom: clamp(var(--sr-space-12), 6vw, var(--sr-space-24));
+  display: grid;
+  gap: var(--sr-space-6);
+}
+
+.guide-hero .title-xl {
+  max-width: 12em;
+}
+
+.guide-layout {
+  display: grid;
+  gap: clamp(var(--sr-space-12), 6vw, var(--sr-space-24));
+  padding-bottom: clamp(var(--sr-space-16), 10vw, 140px);
+  border-top: var(--sr-border-width-default) solid var(--sr-color-border);
+  padding-top: var(--sr-space-12);
+}
+
+.guide-toc {
+  display: grid;
+  gap: var(--sr-space-4);
+  max-width: 56em;
+  font-size: var(--sr-text-sm);
+}
+
+.guide-toc ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 2;
+  column-gap: var(--sr-space-12);
+}
+
+.guide-toc li {
+  break-inside: avoid;
+  padding: var(--sr-space-2) 0;
+  border-bottom: var(--sr-border-width-default) solid var(--sr-color-border);
+}
+
+.guide-toc a {
+  text-decoration: none;
+  color: var(--sr-color-text-muted);
+  transition: color var(--sr-motion-duration-fast) var(--sr-motion-easing-standard);
+}
+
+.guide-toc a:hover {
+  color: var(--sr-color-text);
+}
+
+.guide-toc span {
+  font-variant-numeric: tabular-nums;
+  margin-right: var(--sr-space-2);
+}
+
+.guide-body {
+  max-width: 44em;
+  line-height: var(--sr-leading-normal);
+}
+
+.guide-part {
+  display: grid;
+  gap: var(--sr-space-4);
+  padding-bottom: var(--sr-space-12);
+  margin-bottom: var(--sr-space-12);
+  border-bottom: var(--sr-border-width-default) solid var(--sr-color-border);
+  scroll-margin-top: var(--sr-space-8);
+}
+
+.guide-part:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.guide-part__num {
+  font-family: var(--sr-font-display);
+  font-size: var(--sr-text-3xl);
+  line-height: 1;
+  color: var(--sr-color-accent);
+}
+
+.guide-part__intro {
+  font-size: var(--sr-text-lg);
+}
+
+.guide-points,
+.guide-rules,
+.guide-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--sr-space-4);
+}
+
+.guide-points li,
+.guide-rules li {
+  padding-left: var(--sr-space-4);
+  border-left: var(--sr-border-width-default) solid var(--sr-color-border);
+}
+
+.guide-points strong,
+.guide-rules strong {
+  font-weight: var(--sr-font-weight-semibold);
+}
+
+.guide-steps {
+  counter-reset: etape;
+}
+
+.guide-steps li {
+  counter-increment: etape;
+  display: grid;
+  grid-template-columns: var(--sr-space-8) 1fr;
+}
+
+.guide-steps li::before {
+  content: counter(etape, decimal-leading-zero);
+  color: var(--sr-color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.guide-note {
+  padding: var(--sr-space-4) var(--sr-space-6);
+  background: var(--sr-color-surface-2);
+  font-size: var(--sr-text-sm);
+}
+
+.guide-outro .container {
+  display: grid;
+  gap: var(--sr-space-8);
+}
+
+.guide-outro .title-lg {
+  max-width: 18em;
+}
+
+.guide-outro__text {
+  display: grid;
+  gap: var(--sr-space-4);
+  max-width: 38em;
+  line-height: var(--sr-leading-normal);
+}
+
+.guide-outro__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sr-space-4);
+}
+
+.guide-outro .guide-outro__site {
+  background: transparent;
+  color: var(--sr-color-craie);
+  border-color: var(--sr-color-sable);
+}
+
+.guide-outro .guide-outro__site:hover {
+  border-color: var(--sr-color-craie);
+}
+
+.guide-outro__more {
+  font-size: var(--sr-text-sm);
+  color: var(--sr-color-sable);
+}
+
+.guide-outro__more a {
+  text-underline-offset: 0.3em;
+}
+
+@media (max-width: 900px) {
+  .guide-toc ol {
+    columns: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .guide-outro__actions .sr-btn {
+    width: 100%;
+    height: auto;
+    min-height: var(--sr-component-button-height-lg);
+    padding-block: var(--sr-space-3);
+    white-space: normal;
+    line-height: var(--sr-leading-snug);
+    text-align: center;
+  }
+}
