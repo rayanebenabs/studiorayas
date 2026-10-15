@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import "@fontsource/cormorant-garamond/300.css";
 import "@fontsource/cormorant-garamond/300-italic.css";
 import "@fontsource/cormorant-garamond/400.css";
@@ -27,7 +28,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
-      <body className="sr-root">{children}</body>
+      <body className="sr-root">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
