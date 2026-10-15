@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "@fontsource/cormorant-garamond/300.css";
 import "@fontsource/cormorant-garamond/300-italic.css";
 import "@fontsource/cormorant-garamond/400.css";
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="sr-root">
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
