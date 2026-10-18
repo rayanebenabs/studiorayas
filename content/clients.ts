@@ -225,7 +225,7 @@ export const CLIENTS: Client[] = [
 export const getClient = (slug: string) => CLIENTS.find((c) => c.slug === slug);
 
 /** Projets pas encore sortis : ni sur l'accueil, ni en page de cas. Retirez un slug le jour de sa sortie. */
-export const UNRELEASED: ClientSlug[] = ["slayyy", "inavoue"];
+export const UNRELEASED: ClientSlug[] = ["inavoue"];
 
 /** Les cas montrés sur le site, dans l'ordre de CLIENTS. */
 export const PUBLISHED_CLIENTS = CLIENTS.filter((c) => !UNRELEASED.includes(c.slug));
