@@ -61,13 +61,36 @@ p {
   padding: clamp(var(--sr-space-16), 12vw, 140px) 0;
 }
 
+/*
+ * Bandes et sections inversées. En clair : papier pour les bandes, encre pour l'inversion.
+ * En sombre, le fond est déjà l'encre : la bande passe à la nuit, plus calme que la cendre,
+ * et la section encre se détache par des filets au lieu de se fondre dans la page.
+ */
+:root {
+  --site-band: var(--sr-color-surface-2);
+  --site-edge: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --site-band: var(--sr-color-surface);
+    --site-edge: var(--sr-color-border);
+  }
+}
+
+:root[data-theme="dark"] {
+  --site-band: var(--sr-color-surface);
+  --site-edge: var(--sr-color-border);
+}
+
 .section--papier {
-  background: var(--sr-color-surface-2);
+  background: var(--site-band);
 }
 
 .section--encre {
   background: var(--sr-color-encre);
   color: var(--sr-color-craie);
+  border-block: var(--sr-border-width-default) solid var(--site-edge);
 }
 
 .section--encre .sr-eyebrow {
@@ -1506,13 +1529,15 @@ html.is-scroll-locked {
 
 /* ---------- Contact ---------- */
 
+/* Le contact garde la terre profonde et la craie dans les deux modes : en sombre, l'accent
+   passe à la terre vive avec un texte encre, trop lourd sur un bloc de cette taille. */
 .contact {
-  background: var(--sr-color-accent);
-  color: var(--sr-color-accent-contrast);
+  background: var(--sr-color-terre-profonde);
+  color: var(--sr-color-craie);
 }
 
 .contact .sr-eyebrow {
-  color: var(--sr-color-accent-contrast);
+  color: var(--sr-color-craie);
 }
 
 .contact__title {
@@ -1523,51 +1548,16 @@ html.is-scroll-locked {
   margin-top: var(--sr-space-6);
 }
 
-.contact__studio {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--sr-space-12);
-  margin-top: var(--sr-space-16);
-  padding-top: var(--sr-space-8);
-  border-top: 1px solid currentColor;
-}
-
-.contact__studio ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.contact__studio li {
-  display: grid;
-  grid-template-columns: 9rem 1fr;
-  gap: var(--sr-space-4);
-  padding: var(--sr-space-3) 0;
-  border-bottom: 1px solid color-mix(in srgb, currentColor 40%, transparent);
-  font-size: var(--sr-text-sm);
-}
-
-.contact__studio li strong {
-  font-family: var(--sr-font-display);
-  font-weight: var(--sr-font-weight-light);
-  font-size: var(--sr-text-xl);
-}
-
 .contact .sr-btn--secondary {
   background: var(--sr-color-craie);
-  color: var(--sr-color-accent);
+  color: var(--sr-color-terre-profonde);
   border-color: var(--sr-color-craie);
-}
-
-@media (max-width: 900px) {
-  .contact__studio {
-    grid-template-columns: 1fr;
-  }
 }
 
 .site-footer {
   background: var(--sr-color-encre);
   color: var(--sr-color-craie);
+  border-top: var(--sr-border-width-default) solid var(--site-edge);
   font-size: var(--sr-text-sm);
 }
 
