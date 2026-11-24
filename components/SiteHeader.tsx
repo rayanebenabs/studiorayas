@@ -2,8 +2,20 @@ import Link from "next/link";
 import { Totem } from "./Totem";
 import { MobileMenu } from "./MobileMenu";
 
-export function SiteHeader({ home = false }: { home?: boolean }) {
-  const base = home ? "" : "/";
+/** Le menu ne mène qu'à des pages. Chaque sujet a une seule adresse. */
+export const NAV = [
+  { href: "/methode/", label: "Méthode" },
+  { href: "/travaux/", label: "Travaux" },
+  { href: "/studio/", label: "Studio" },
+  { href: "/galerie/", label: "Galerie" },
+];
+
+/**
+ * `contact` : la page se termine par le bloc de contact, le bouton y descend.
+ * Sinon (galerie, guide), il mène au contact de la page Studio.
+ */
+export function SiteHeader({ contact = true }: { home?: boolean; contact?: boolean }) {
+  const cta = { href: contact ? "#contact" : "/studio/#contact", label: "Commencer par un diagnostic" };
   return (
     <header className="site-header">
       <div className="site-header__inner">
@@ -13,24 +25,17 @@ export function SiteHeader({ home = false }: { home?: boolean }) {
         </Link>
         <nav aria-label="Navigation principale">
           <ul className="site-header__links">
-            <li><a href={`${base}#methode`}>Méthode</a></li>
-            <li><a href={`${base}#travaux`}>Travaux</a></li>
-            <li><a href={`${base}#studio`}>Studio</a></li>
-            <li><Link href="/galerie/">Galerie</Link></li>
+            {NAV.map((n) => (
+              <li key={n.href}>
+                <Link href={n.href}>{n.label}</Link>
+              </li>
+            ))}
           </ul>
         </nav>
-        <a className="site-header__cta" href={`${base}#contact`}>
-          Commencer par un diagnostic
+        <a className="site-header__cta" href={cta.href}>
+          {cta.label}
         </a>
-        <MobileMenu
-          items={[
-            { href: `${base}#methode`, label: "Méthode" },
-            { href: `${base}#travaux`, label: "Travaux" },
-            { href: `${base}#studio`, label: "Studio" },
-            { href: "/galerie/", label: "Galerie", route: true },
-          ]}
-          cta={{ href: `${base}#contact`, label: "Commencer par un diagnostic" }}
-        />
+        <MobileMenu items={NAV.map((n) => ({ ...n, route: true }))} cta={cta} />
       </div>
     </header>
   );

@@ -78,7 +78,7 @@ function Points({ items }: { items: GuidePoint[] }) {
 export default function GuidePage() {
   return (
     <main className="guide">
-      <SiteHeader />
+      <SiteHeader contact={false} />
 
       <header className="guide-hero container">
         <p className="sr-eyebrow">Guide · {GUIDE.date} · {GUIDE.author}</p>

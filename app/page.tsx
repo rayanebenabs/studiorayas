@@ -2,15 +2,12 @@ import { Hero } from "@/components/home/Hero";
 import { WhyNow } from "@/components/home/WhyNow";
 import { Manifesto } from "@/components/home/Manifesto";
 import { Steps } from "@/components/home/Steps";
-import { Usages } from "@/components/home/Usages";
-import { Benefits } from "@/components/home/Benefits";
 import { Work } from "@/components/home/Work";
-import { GalleryTeaser } from "@/components/home/GalleryTeaser";
-import { Owned } from "@/components/home/Owned";
-import { Contact } from "@/components/home/Contact";
+import { Contact } from "@/components/Contact";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ScrollFlow } from "@/components/ScrollFlow";
 
+// L'accueil résume, les pages détaillent : Méthode, Travaux, Studio, Galerie.
 export default function Home() {
   return (
     <main>
@@ -18,11 +15,7 @@ export default function Home() {
       <WhyNow />
       <Manifesto />
       <Steps />
-      <Usages />
-      <Benefits />
       <Work />
-      <GalleryTeaser />
-      <Owned />
       <Contact />
       <SiteFooter />
       <ScrollFlow />

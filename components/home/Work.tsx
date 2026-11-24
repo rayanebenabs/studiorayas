@@ -7,10 +7,14 @@ import { PUBLISHED_CLIENTS } from "@/content/clients";
 
 const COUNT = ["Zéro", "Une", "Deux", "Trois", "Quatre", "Cinq", "Six", "Sept", "Huit", "Neuf", "Dix"];
 
-/** L'index des travaux. Au survol, un visuel du cas suit le curseur, posé à plat. */
-export function Work() {
+/**
+ * L'index des travaux. Au survol, un visuel du cas suit le curseur, posé à plat.
+ * `page` : la page Travaux, où le titre est le h1. Sinon, l'aperçu de l'accueil, qui mène à la page.
+ */
+export function Work({ page = false }: { page?: boolean }) {
   const preview = useRef<HTMLDivElement>(null);
   const [img, setImg] = useState<string | null>(null);
+  const Title = page ? "h1" : "h2";
   const count = COUNT[PUBLISHED_CLIENTS.length] ?? String(PUBLISHED_CLIENTS.length);
 
   const move = (e: MouseEvent) => {
@@ -25,15 +29,15 @@ export function Work() {
   const hide = () => preview.current && gsap.to(preview.current, { opacity: 0, duration: 0.15 });
 
   return (
-    <section className="section" id="travaux" aria-labelledby="travaux-t" onMouseMove={move}>
+    <section className={page ? "section work-page" : "section"} aria-labelledby="travaux-t" onMouseMove={move}>
       <div className="container">
         <p className="sr-eyebrow">Travaux</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "var(--sr-space-8)", flexWrap: "wrap", marginTop: "var(--sr-space-6)" }}>
-          <h2 id="travaux-t" className="title-lg">
+          <Title id="travaux-t" className={page ? "title-xl" : "title-lg"}>
             {count} {PUBLISHED_CLIENTS.length > 1 ? "marques" : "marque"},
             <br />
             {count.toLowerCase()} {PUBLISHED_CLIENTS.length > 1 ? "systèmes" : "système"}.
-          </h2>
+          </Title>
           <p className="muted" style={{ maxWidth: "22em" }}>
             Sur chaque cas : le branding, la charte, et un brand-check à jouer.
           </p>

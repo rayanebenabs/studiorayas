@@ -4,7 +4,7 @@ import { Reveal } from "../Reveal";
 export function WhyNow() {
   return (
     <Reveal as="section" className="section" >
-      <div className="container" id="methode">
+      <div className="container">
         <p className="sr-eyebrow" data-reveal>{WHY_NOW.eyebrow}</p>
         <h2 className="title-lg" style={{ marginTop: "var(--sr-space-6)", maxWidth: "20em" }}>
           {WHY_NOW.title.map((t) => (

@@ -5,6 +5,11 @@ export const CONTACT_EMAIL = "";
 
 export const BRAND_LINE = "On rend l'artistique technique.";
 
+export const CONTACT = {
+  eyebrow: "Contact",
+  text: "Le diagnostic est le regard extérieur, à l'entrée. Ce qui existe, ce qui cloche, ce qu'il faut décider. Et un avis franc sur la suite.",
+};
+
 export const PHASES = [
   { n: "01", name: "Brand engineering", line: "Votre marque, écrite comme un système.", totem: "trait" },
   { n: "02", name: "Diagnostic", line: "Un regard extérieur, avant de toucher à quoi que ce soit.", totem: "encre" },
@@ -29,8 +34,8 @@ export const MANIFESTO =
 export const STEPS = [
   { title: "Rassembler", text: "Votre marque vit dans des PDF, des decks et la tête de quelques personnes. Le diagnostic rassemble tout ce qui existe." },
   { title: "Écrire", text: "Des règles qu'une IA comprend. Plus de chasse aux documents, plus de faits inventés." },
-  { title: "Appliquer", text: "Un communiqué devient un post, un post devient un e-mail. Chaque version reste dans la marque, que l'auteur soit humain ou agent." },
-  { title: "Vérifier et faire évoluer", text: "Une note et une correction précise, avant publication. Chaque évolution est datée dans le journal, et c'est vous qui la faites." },
+  { title: "Appliquer", text: "Dans Claude, dans ChatGPT, dans le code de vos sites. Un communiqué devient un post, un post devient un e-mail, et chaque version reste dans la marque." },
+  { title: "Vérifier et faire évoluer", text: "Une note et une correction précise, avant publication. Chaque évolution est classée, testée, validée, puis datée dans le journal. C'est vous qui la faites." },
 ];
 
 export interface UsageCard {
@@ -97,12 +102,6 @@ export const OWNED = {
     { title: "Vous le faites évoluer seul", text: "Le studio fonde, il ne fait pas tourner. Il s'arrête quand la marque tient seule." },
   ],
 };
-
-export const OFFER = [
-  { name: "Diagnostic", text: "Le regard extérieur, à l'entrée." },
-  { name: "Brand OS", text: "L'offre centrale : le dossier de règles livré, que vous faites évoluer seul." },
-  { name: "Sparring", text: "Un jour de conseil par mois." },
-];
 
 export const WHY_US = [
   "Stratégie et identité sortent de la même main.",

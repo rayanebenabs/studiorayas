@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 import { addSettler, pickRest, scrollToY } from "@/lib/scroll";
 import { STEPS } from "@/content/site";
@@ -217,6 +218,9 @@ export function Steps() {
               <strong>{STEPS[active].title}</strong>
               <p>{STEPS[active].text}</p>
             </div>
+            <Link href="/methode/" className="steps__more">
+              Le brand engineering et le process en détail
+            </Link>
           </div>
 
           <div className="steps__panel" aria-hidden="true">

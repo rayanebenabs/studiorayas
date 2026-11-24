@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function GaleriePage() {
   return (
     <main>
-      <SiteHeader />
+      <SiteHeader contact={false} />
       <Gallery />
       <SiteFooter />
     </main>
